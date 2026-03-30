@@ -1,0 +1,170 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Reply;
+use App\Models\Ticket;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class TicketController extends Controller
+{
+    /** Show ticket details with comments. */
+    public function show($id)
+    {
+        $ticket = Ticket::with(['user', 'replies.admin'])->withCount([
+            'replies as unread_replies_count' => function ($query) {
+                $query->whereNull('admin_id')->where('is_read', 0);
+            }
+        ])->findOrFail($id);
+
+        // User doesn't want to mark as read when full page is opened, only when icon is clicked
+        // if (!$ticket->has_admin_read) {
+        //     $ticket->update(['has_admin_read' => true]);
+        // }
+        // $ticket->replies()->whereNull('admin_id')->where('is_read', false)->update(['is_read' => true]);
+
+        return view('admin.show-ticket', compact('ticket'));
+    }
+
+    /** Update the ticket status. */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:open,in progress,closed',
+        ]);
+
+        $ticket = Ticket::findOrFail($id);
+        $currentUserId = Auth::id();
+
+        // Exclusive Lock Logic: If target status is 'in progress' or 'closed'
+        if (in_array($request->status, ['in progress', 'closed'])) {
+            $ownerId = $ticket->inprogress_by ?: $ticket->closed_by;
+            if ($ownerId && $ownerId !== $currentUserId) {
+                $ownerName = $ticket->inprogressBy->name ?? ($ticket->closer->name ?? 'another admin');
+                return response()->json([
+                    'success' => false,
+                    'message' => "Unauthorized: This ticket is already being handled by {$ownerName}."
+                ], 403);
+            }
+        }
+
+        $updateData = ['status' => $request->status];
+
+        if ($request->status === 'closed') {
+            $updateData['closed_by'] = $currentUserId;
+        } elseif ($request->status === 'in progress') {
+            $updateData['inprogress_by'] = $currentUserId;
+            $updateData['closed_by'] = null; // Clear closer if moved back to progress
+        } else {
+            // Re-opening: Clear both
+            $updateData['closed_by'] = null;
+            $updateData['inprogress_by'] = null;
+        }
+
+        $ticket->update($updateData);
+        $ticket->load(['inprogressBy', 'closer']);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Status updated successfully.',
+                'new_status' => $ticket->status,
+                'closer' => $ticket->closer ? $ticket->closer->name : '---',
+                'inprogress_by' => $ticket->inprogressBy ? $ticket->inprogressBy->name : '---'
+            ]);
+        }
+
+        return back()->with('success', 'Status updated successfully.');
+    }
+
+    /** Get ticket chat data for AJAX popup. */
+    public function getChatData($id)
+    {
+        $ticket = Ticket::with(['user', 'replies.admin'])->findOrFail($id);
+
+        $unreadCount = $ticket->replies->whereNull('admin_id')->where('is_read', 0)->count();
+
+        // Mark as read for admin
+        if (!$ticket->has_admin_read) {
+            $ticket->update(['has_admin_read' => true]);
+        }
+        $ticket->replies()->whereNull('admin_id')->where('is_read', false)->update(['is_read' => true]);
+
+        return response()->json([
+            'success' => true,
+            'ticket' => [
+                'id' => $ticket->id,
+                'subject' => $ticket->subject,
+                'status' => $ticket->status,
+                'user_name' => $ticket->user->name ?? 'User',
+            ],
+            'unread_count' => $unreadCount,
+            'replies' => $ticket->replies->map(function ($reply) {
+                static $dividerInserted = false;
+                $isFirstUnread = false;
+
+                if (!$dividerInserted && !$reply->isFromAdmin() && !$reply->is_read) {
+                    $isFirstUnread = true;
+                    $dividerInserted = true;
+                }
+
+                return [
+                    'body' => $reply->body,
+                    'image' => $reply->image ? asset('storage/' . $reply->image) : null,
+                    'is_admin' => $reply->isFromAdmin(),
+                    'sender' => $reply->isFromAdmin() ? ($reply->admin->name ?? 'Admin') : ($reply->user->name ?? 'User'),
+                    'time' => $reply->created_at->format('g:i A'),
+                    'is_first_unread' => $isFirstUnread,
+                ];
+            })
+        ]);
+    }
+
+    /** Store a new admin comment on the ticket. */
+    public function storeComment(Request $request, $id)
+    {
+        $request->validate([
+            'body' => 'nullable|string|max:2000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        if (!$request->body && !$request->hasFile('image')) {
+            return response()->json(['success' => false, 'message' => 'Message or image is required.'], 422);
+        }
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = date('Y-m-d_(H-i)') . '.' . $image->getClientOriginalExtension();
+            $imagePath = $image->storeAs('tickets', $filename, 'public');
+        }
+
+        $reply = Reply::create([
+            'ticket_id' => $id,
+            'admin_id' => Auth::id(),
+            'body' => $request->body ?? '',
+            'image' => $imagePath,
+        ]);
+
+        // Mark as unread for the user
+        Ticket::where('id', $id)->update(['has_user_read' => false]);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Comment posted.',
+                'reply' => [
+                    'body' => $reply->body,
+                    'is_admin' => true,
+                    'image' => $reply->image ? asset('storage/' . $reply->image) : null,
+                    'sender' => Auth::user()->name ?? 'Admin',
+                    'time' => $reply->created_at->format('g:i A'),
+                ]
+            ]);
+        }
+
+        return back()->with('success', 'Comment posted.');
+    }
+}
