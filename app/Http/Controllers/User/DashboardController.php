@@ -15,26 +15,29 @@ class DashboardController extends Controller
         $defaultDate = now()->format('Y-m-d');
         $date = request()->filled('date') ? request('date') : $defaultDate;
 
-        $openTickets = Ticket::where('user_id',$userId)->whereDate('created_at', $date)->where('status','open')->count();
-
-        $inprogressTickets = Ticket::where('user_id',$userId)->whereDate('created_at', $date)->where('status','in progress')->count();
-
-        $closedTickets = Ticket::where('user_id',$userId)->whereDate('created_at', $date)->where('status','closed')->count();
-
-        $totalTickets = Ticket::where('user_id',$userId)->whereDate('created_at', $date)->count();
-
-        $tickets = Ticket::where('user_id',$userId)
+        $query = Ticket::where('user_id', $userId)
                         ->whereDate('created_at', $date)
                         ->withCount(['replies as unread_replies_count' => function($query) {
                             $query->whereNotNull('admin_id')->where('is_read', 0);
-                        }])
-                        ->latest()->paginate(10);
+                        }]);
+
+        if ($subject = request('subject')) {
+            $query->where('subject', 'like', '%' . $subject . '%');
+        }
+
+        if ($status = request('status')) {
+            $query->where('status', $status);
+        }
+
+        if ($closerName = request('closer_name')) {
+            $query->whereHas('closer', function($q) use ($closerName) {
+                $q->where('name', 'like', '%' . $closerName . '%');
+            });
+        }
+
+        $tickets = $query->latest()->paginate(10);
 
         return view('user.dashboard',compact(
-            'openTickets',
-            'inprogressTickets',
-            'closedTickets',
-            'totalTickets',
             'tickets',
             'date'
         ));

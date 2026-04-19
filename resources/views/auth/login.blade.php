@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — Ticket System</title>
+    <title>Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="{{ asset('img\Gold-Era.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('img\HelpTK--.png') }}">
     <link rel="stylesheet" href="{{ url('css/login.css') }}">
 </head>
 <body>
@@ -18,17 +18,17 @@
     <div class="card-inner">
 
         <div class="header">
-            <div class="logo-wrap">
-                <img src="{{ asset('img/Gold-Era.png') }}" alt="Gold Era" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-                <span style="display:none">GE</span>
+            <div class="logo-wrap" style="width: auto; height: auto;">
+                <img src="{{ asset('img\HelpTK-.png') }}" alt="HelpTK" style="height: 120px; width: auto; object-fit: contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                <span style="display:none">HTK</span>
             </div>
-            <h1>Ticket System</h1>
+            <h1>Support Ticket System</h1>
             <p>Welcome back — sign in to continue</p>
         </div>
 
         <div class="divider">
             <div class="divider-line"></div>
-            <span>Gold Era</span>
+            <span>HelpTK</span>
             <div class="divider-line"></div>
         </div>
 
@@ -73,7 +73,7 @@
             </button>
         </form>
 
-        <p class="footer-note">Gold Era &copy; {{ date('Y') }} &nbsp;·&nbsp; <strong>Ticket System</strong></p>
+        <p class="footer-note">HelpTK &copy; {{ date('Y') }} &nbsp;·&nbsp; <strong>Ticket System</strong></p>
     </div>
 </div>
 

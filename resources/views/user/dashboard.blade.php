@@ -25,115 +25,6 @@
 @section('content')
 
     <style>
-        /* Royal Minimalist Cards */
-        .royal-card {
-            background: #ffffff;
-            border-radius: 18px;
-            position: relative;
-            padding: 1.6rem 1.75rem 1.4rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 130px;
-            transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03);
-            overflow: hidden;
-        }
-
-        .royal-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
-            border-color: rgba(var(--accent-rgb, 212, 175, 83), 0.25);
-        }
-
-        /* Left accent bar */
-        .royal-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--accent-color, #d4af53);
-            border-radius: 4px 0 0 4px;
-        }
-
-        /* Top edge gradient shimmer */
-        .royal-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 4px;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-color, #d4af53) 0%, transparent 100%);
-            opacity: 0.18;
-            border-radius: 0 18px 0 0;
-        }
-
-        .royal-card-watermark {
-            position: absolute;
-            right: -8px;
-            bottom: -8px;
-            color: var(--accent-color, #d4af53);
-            opacity: 0.19;
-            transform: rotate(-15deg);
-            z-index: 0;
-        }
-
-        .royal-card-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .royal-card-title {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 0.55rem;
-        }
-
-        .royal-card-value {
-            font-family: 'Inter', sans-serif;
-            font-size: 2rem;
-            font-weight: 500;
-            color: #111;
-            line-height: 1;
-            letter-spacing: -1px;
-        }
-
-        .royal-card-sub {
-            font-size: 0.72rem;
-            color: #bbb;
-            margin-top: 0.45rem;
-            font-family: 'DM Sans', sans-serif;
-        }
-
-        .royal-card-icon-min {
-            position: absolute;
-            top: 1.4rem;
-            right: 1.4rem;
-            width: 52px;
-            height: 52px;
-            background: var(--icon-bg, rgba(212, 175, 83, 0.08));
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-color, #d4af53);
-            font-size: 1.45rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .royal-card:hover .royal-card-icon-min {
-            transform: scale(1.1) rotate(-5deg);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
-        }
-
         /* Standard Table Overrides to match Admin View */
         .table-bordered {
             background: #fff;
@@ -161,8 +52,8 @@
             border-color: #e8eaed !important;
         }
 
-        .table-bordered tbody tr:hover td {
-            background: rgba(212, 175, 83, 0.08) !important;
+        .table-bordered tbody tr:not(.empty-state-row):hover td {
+            background: rgba(0, 0, 0, 0.02) !important;
         }
 
         .action-btn-premium {
@@ -196,114 +87,117 @@
             border-color: rgba(220, 53, 69, 0.25);
             background: rgba(220, 53, 69, 0.02);
         }
+
+        /* Inline Filters */
+        .inline-filter-select,
+        .inline-filter-input {
+            background: #fcfcfc;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            color: #555;
+            width: 100%;
+            transition: all 0.2s ease;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .inline-filter-select:focus,
+        .inline-filter-input:focus {
+            border-color: #d4af53;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(212, 175, 83, 0.1);
+        }
+
+        .btn-clear-inline {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid #eee;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .btn-clear-inline:hover {
+            background: #f8f9fa;
+            color: #dc3545;
+            border-color: #ffcccc;
+        }
+
+        .search-icon-input {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 10px center;
+            padding-left: 30px !important;
+        }
+
+        /* Hide placeholder text, keep only the icon */
+        .search-icon-input::placeholder {
+            color: transparent;
+        }
     </style>
 
     <div class="container mt-4">
 
-        <div class="mb-5">
-            <h2 style="font-family: 'Playfair Display', serif; font-weight: 600; color: #0a0a0a; margin-bottom: 4px;">
-                👋 Welcome, <span style="color: #d4af53;">{{ Auth::user()->name }}</span>
-            </h2>
-            <p style="color: #666; margin-top: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 12px;">
-                <span
-                    style="font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: #3b6fd4; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: rgba(59, 111, 212, 0.07); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(59, 111, 212, 0.12); box-shadow: 0 2px 5px rgba(59, 111, 212, 0.05); white-space: nowrap;">
-                    <span style="margin-right: 4px;">👤</span> User
-                </span>
-                Manage your support tickets and track their status below.
-            </p>
-        </div>
-
-        <div class="row g-4">
-
-            <!-- Open Tickets -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="royal-card h-100" style="--accent-color: #dc3545; --icon-bg: rgba(220, 53, 69, 0.08);">
-                    <div class="royal-card-watermark">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path
-                                d="M2 9V5.2a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2V9a2 2 0 0 0 0 6v3.8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V15a2 2 0 0 0 0-6z" />
-                            <path d="M14 3v2" />
-                            <path d="M14 8v2" />
-                            <path d="M14 13v2" />
-                            <path d="M14 18v2" />
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-8">
+                <h2 style="font-family: 'Playfair Display', serif; font-weight: 600; color: #0a0a0a; margin-bottom: 4px;">
+                    👋 Welcome, <span style="color: #d4af53;">{{ Auth::user()->name }}</span>
+                </h2>
+                <p style="color: #666; margin-top: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 12px;">
+                    <span
+                        style="font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: #3b6fd4; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: rgba(59, 111, 212, 0.07); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(59, 111, 212, 0.12); box-shadow: 0 2px 5px rgba(59, 111, 212, 0.05); white-space: nowrap;">
+                        <span style="margin-right: 4px;">👤</span> User
+                    </span>
+                    Manage your support tickets and track their status below.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ route('knowledge.base') }}" 
+                   style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: #fff; border: 1px solid rgba(212, 175, 83, 0.25); border-radius: 14px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(212, 175, 83, 0.08);">
+                    <div style="width: 40px; height: 40px; background: rgba(212, 175, 83, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #d4af53;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                         </svg>
                     </div>
-                    <div class="royal-card-content">
-                        <div class="royal-card-title">Open Tickets</div>
-                        <div class="royal-card-value">{{ $openTickets }}</div>
-                        <div class="royal-card-sub">Awaiting response</div>
+                    <div style="text-align: left;">
+                        <div style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Need Help?</div>
+                        <div style="font-size: 0.95rem; color: #111; font-weight: 600;">Knowledge Base</div>
                     </div>
-                </div>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 10px;">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+                <style>
+                    .col-lg-4 a:hover {
+                        transform: translateY(-3px);
+                        box-shadow: 0 8px 25px rgba(212, 175, 83, 0.15);
+                        border-color: #d4af53;
+                    }
+                </style>
             </div>
-
-            <!-- In Progress -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="royal-card" style="--accent-color: #d4af53; --icon-bg: rgba(212, 175, 83, 0.08);">
-                    <div class="royal-card-watermark">
-                        <span style="font-size: 80px;">👍🏻</span>
-                    </div>
-                    <div class="royal-card-content">
-                        <div class="royal-card-title">In Progress</div>
-                        <div class="royal-card-value">{{ $inprogressTickets }}</div>
-                        <div class="royal-card-sub">Being handled</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Closed Tickets -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="royal-card h-100" style="--accent-color: #198754; --icon-bg: rgba(25, 135, 84, 0.08);">
-                    <div class="royal-card-watermark">
-                        <span style="font-size: 80px;">✅️</span>
-                    </div>
-                    <div class="royal-card-content">
-                        <div class="royal-card-title">Closed Tickets</div>
-                        <div class="royal-card-value">{{ $closedTickets }}</div>
-                        <div class="royal-card-sub">Resolved & closed</div>
-                    </div>
-                </div>
-            </div>
-
-                        <!-- Total Tickets -->
-            <div class="col-12 col-sm-6 col-md-3">
-                <div class="royal-card h-100" style="--accent-color: #3b6fd4; --icon-bg: rgba(59, 111, 212, 0.08);">
-                    <div class="royal-card-watermark">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                            <path d="M12 11h4"></path>
-                            <path d="M12 16h4"></path>
-                            <path d="M8 11h.01"></path>
-                            <path d="M8 16h.01"></path>
-                        </svg>
-                    </div>
-                    <div class="royal-card-content">
-                        <div class="royal-card-title">Total Tickets</div>
-                        <div class="royal-card-value">{{ $totalTickets }}</div>
-                        <div class="royal-card-sub">All time requests</div>
-                    </div>
-                </div>
-            </div>
-            
         </div>
 
-        
+
 
         <div class="card mt-4 shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
 
-            <div class="card-header bg-white py-3 px-4 d-flex justify-content-between align-items-center border-bottom-0">
-<span class="m-0" style="font-weight: 550; color: #111; font-family: 'Inter', sans-serif; font-size: 1.05rem;">
-  Recent Tickets
-</span>                <form method="GET" class="d-flex align-items-center m-0">
-                    <label for="date" class="form-label me-2 mb-0 text-nowrap" style="font-size: 0.85rem; color: #666;">Filter Date:</label>
-                    <input type="date" class="form-control form-control-sm" id="date" name="date"
-                        value="{{ $date }}" onchange="this.form.submit()" style="border-radius: 8px; border-color: #eee;">
-                </form>
+            <div class="card-header bg-white pt-4 pb-1 px-3 border-bottom-0">
+                <div style="border-left: 4px solid var(--accent-color, #d4af53); padding-left: 12px;">
+                    <h5 class="m-0"
+                        style="font-weight: 600; color: #111; font-family: 'Inter', sans-serif; font-size: 1.15rem; letter-spacing: -0.3px;">
+                        My Tickets
+                    </h5>
+                </div>
             </div>
 
             <div class="card-body p-0">
+                <form method="GET" action="{{ route('user.dashboard') }}" id="filterForm"></form>
                 <div class="table-responsive" style="overflow: visible;">
                     <table class="table table-bordered mb-0">
                         <thead>
@@ -312,7 +206,44 @@
                                 <th>Status</th>
                                 <th>Closed By</th>
                                 <th>Date</th>
-                                <th class="text-start">Action</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                            <tr style="background: rgba(212, 175, 83, 0.02);">
+                                <td style="padding: 10px 15px;">
+                                    <input type="text" name="subject" id="filter_subject" form="filterForm"
+                                        class="inline-filter-input search-icon-input" placeholder="Subject..."
+                                        value="{{ request('subject') }}" oninput="debounceSubmit()">
+                                </td>
+                                <td style="padding: 10px 15px;">
+                                    <select name="status" class="inline-filter-select" form="filterForm"
+                                        onchange="document.getElementById('filterForm').submit()">
+                                        <option value="">All Status</option>
+                                        <option value="open" {{ request('status') == 'open' ? 'selected' : '' }}>Open</option>
+                                        <option value="in progress" {{ request('status') == 'in progress' ? 'selected' : '' }}>In Progress</option>
+                                        <option value="closed" {{ request('status') == 'closed' ? 'selected' : '' }}>Closed
+                                        </option>
+                                    </select>
+                                </td>
+                                <td style="padding: 10px 15px;">
+                                    <input type="text" name="closer_name" id="filter_closer_name" form="filterForm"
+                                        class="inline-filter-input search-icon-input" placeholder="Closed by..."
+                                        value="{{ request('closer_name') }}" oninput="debounceSubmit()">
+                                </td>
+                                <td style="padding: 10px 15px;">
+                                    <input type="date" name="date" class="inline-filter-input" value="{{ $date }}"
+                                        form="filterForm" onchange="document.getElementById('filterForm').submit()">
+                                </td>
+                                <td class="text-center" style="padding: 10px 15px;">
+                                    <a href="{{ route('user.dashboard') }}" class="btn-clear-inline" title="Clear Filters">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="1 4 1 10 7 10"></polyline>
+                                            <polyline points="23 20 23 14 17 14"></polyline>
+                                            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                </td>
                             </tr>
                         </thead>
 
@@ -323,9 +254,9 @@
                                     <td>
                                         <span class="badge"
                                             style="padding: 0.5rem 0.8rem; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-                                            @if ($ticket->status == 'open') background: rgba(220, 53, 69, 0.1); color: #dc3545;
-                                            @elseif($ticket->status == 'in progress') background: rgba(212, 175, 83, 0.15); color: #b8860b;
-                                            @else background: rgba(25, 135, 84, 0.1); color: #198754; @endif">
+                                                                    @if ($ticket->status == 'open') background: rgba(220, 53, 69, 0.1); color: #dc3545;
+                                                                    @elseif($ticket->status == 'in progress') background: rgba(212, 175, 83, 0.15); color: #b8860b;
+                                                                    @else background: rgba(25, 135, 84, 0.1); color: #198754; @endif">
                                             {{ ucfirst($ticket->status) }}
                                             @if ($ticket->status == 'open')
                                                 🎟️
@@ -348,8 +279,7 @@
                                                 </svg>
                                             </span>
                                             <div>
-                                                <div
-                                                    style="font-weight:600; color:#333; font-size:0.88rem; line-height:1.2;">
+                                                <div style="font-weight:600; color:#333; font-size:0.88rem; line-height:1.2;">
                                                     {{ $ticket->created_at->format('g:i A') }}
                                                 </div>
                                                 <div style="font-size:0.72rem; color:#aaa; margin-top:2px;">
@@ -358,8 +288,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-start">
-                                        <div class="d-flex align-items-center gap-1">
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center align-items-center gap-1">
                                             @php
                                                 $msgCount = $ticket->unread_replies_count ?? 0;
                                             @endphp
@@ -388,13 +318,18 @@
                                             </a>
 
                                             {{-- Direct Delete Button --}}
-                                            <form method="POST" action="{{ route('tickets.destroy', $ticket->id) }}"
-                                                class="m-0" onsubmit="return confirm('Delete this ticket?')">
+                                            <form method="POST" action="{{ route('tickets.destroy', $ticket->id) }}" class="m-0"
+                                                onsubmit="return confirm('Delete this ticket?')">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="action-btn-premium action-btn-danger" title="Delete Ticket">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <button type="submit" class="action-btn-premium action-btn-danger"
+                                                    title="Delete Ticket">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                        stroke-linecap="round" stroke-linejoin="round">
                                                         <polyline points="3 6 5 6 21 6"></polyline>
-                                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                                        <path
+                                                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                        </path>
                                                         <line x1="10" y1="11" x2="10" y2="17"></line>
                                                         <line x1="14" y1="11" x2="14" y2="17"></line>
                                                     </svg>
@@ -404,10 +339,26 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="5" class="text-center py-5">
-                                        <div class="text-muted mb-2">No tickets found</div>
-                                        <a href="{{ route('tickets.create') }}" class="btn btn-sm btn-primary">Create Your First Ticket</a>
+                                <tr class="empty-state-row">
+                                    <td colspan="5" class="text-center" style="padding: 4rem 1rem;">
+                                        <div
+                                            style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                            <div
+                                                style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">
+                                                📭</div>
+                                            <h5
+                                                style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">
+                                                It's quiet here!</h5>
+                                            <p style="color: #777; font-size: 0.95rem; margin-bottom: 1.5rem;">You haven't
+                                                submitted any tickets matching this filter.</p>
+                                            <a href="{{ route('tickets.create') }}" class="btn-create"
+                                                style="text-decoration: none;">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M12 5v14M5 12h14" />
+                                                </svg>
+                                                Create Your First Ticket
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             @endforelse
@@ -420,7 +371,8 @@
                     <div class="px-4 pb-4">
                         <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                             <small class="text-muted">
-                                Showing {{ $tickets->firstItem() }}–{{ $tickets->lastItem() }} of {{ $tickets->total() }} tickets
+                                Showing {{ $tickets->firstItem() }}–{{ $tickets->lastItem() }} of {{ $tickets->total() }}
+                                tickets
                             </small>
                             {{ $tickets->links() }}
                         </div>
@@ -433,14 +385,43 @@
     @include('admin.partials._chat')
 
     <script>
+        // Automatic Filtering Logic
+        let timeout = null;
+        function debounceSubmit() {
+            clearTimeout(timeout);
+            // Store the ID of the element currently in focus
+            if (document.activeElement && document.activeElement.id) {
+                sessionStorage.setItem('lastFocusedUserFilter', document.activeElement.id);
+            }
+            timeout = setTimeout(() => {
+                document.getElementById('filterForm').submit();
+            }, 600); // 600ms delay to feel natural
+        }
+
+        // Restore focus on page load
+        window.onload = function () {
+            const lastFocusedId = sessionStorage.getItem('lastFocusedUserFilter');
+            if (lastFocusedId) {
+                const element = document.getElementById(lastFocusedId);
+                if (element) {
+                    // Set focus and move cursor to the end
+                    element.focus();
+                    const val = element.value;
+                    element.value = '';
+                    element.value = val;
+                }
+                sessionStorage.removeItem('lastFocusedUserFilter');
+            }
+        };
+
         // Make table rows clickable (safe mode - matches Admin)
-        document.querySelectorAll('table tbody tr').forEach(row => {
+        document.querySelectorAll('table tbody tr:not(.empty-state-row)').forEach(row => {
             row.addEventListener('click', function (e) {
                 // Don't navigate if clicking on interactive elements
-                const isInteractive = e.target.closest('a') || 
-                                    e.target.closest('button') || 
-                                    e.target.closest('input') || 
-                                    e.target.closest('select');
+                const isInteractive = e.target.closest('a') ||
+                    e.target.closest('button') ||
+                    e.target.closest('input') ||
+                    e.target.closest('select');
 
                 if (isInteractive) return;
 
@@ -448,14 +429,6 @@
                 if (ticketId) {
                     window.location.href = `/user/tickets/${ticketId}`;
                 }
-            });
-
-            // Add hover effect
-            row.addEventListener('mouseover', function () {
-                this.style.backgroundColor = 'rgba(212, 175, 83, 0.08)';
-            });
-            row.addEventListener('mouseout', function () {
-                this.style.backgroundColor = '';
             });
         });
     </script>

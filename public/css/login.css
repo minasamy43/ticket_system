@@ -93,7 +93,6 @@ body::after {
 
         .logo-wrap {
             width: 64px; height: 64px;
-            background: #1e2328;
             border-radius: 14px;
             display: inline-flex;
             align-items: center;
@@ -102,7 +101,7 @@ body::after {
         }
 
         .logo-wrap img {
-            width: 42px;
+            width: 94px; height: 84px;
             object-fit: contain;
         }
 

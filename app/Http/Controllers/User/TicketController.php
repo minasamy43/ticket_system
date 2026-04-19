@@ -85,6 +85,7 @@ class TicketController extends Controller
                 'success' => true,
                 'message' => 'Reply sent.',
                 'reply' => [
+                    'id' => $reply->id,
                     'body' => $reply->body,
                     'is_admin' => false,
                     'image' => $reply->image ? asset('storage/' . $reply->image) : null,
@@ -179,7 +180,7 @@ class TicketController extends Controller
     }
 
     /** Get ticket chat data for AJAX popup. */
-    public function getChatData($id)
+    public function getChatData(Request $request, $id)
     {
         $ticket = Ticket::with(['user', 'replies.admin'])->findOrFail($id);
 
@@ -187,6 +188,14 @@ class TicketController extends Controller
             abort(403, 'Unauthorized');
         }
 
+        $lastId = $request->query('last_id');
+        $repliesQuery = $ticket->replies();
+        
+        if ($lastId) {
+            $repliesQuery->where('id', '>', $lastId);
+        }
+
+        $replies = $repliesQuery->get();
         $unreadCount = $ticket->replies->whereNotNull('admin_id')->where('is_read', 0)->count();
 
         // Mark as read for user
@@ -204,16 +213,18 @@ class TicketController extends Controller
                 'user_name' => $ticket->user->name ?? 'User',
             ],
             'unread_count' => $unreadCount,
-            'replies' => $ticket->replies->map(function ($reply) {
+            'replies' => $replies->map(function ($reply) use ($lastId) {
                 static $dividerInserted = false;
                 $isFirstUnread = false;
 
-                if (!$dividerInserted && $reply->isFromAdmin() && !$reply->is_read) {
+                // Only show divider on initial load (when last_id is null)
+                if (!$lastId && !$dividerInserted && $reply->isFromAdmin() && !$reply->is_read) {
                     $isFirstUnread = true;
                     $dividerInserted = true;
                 }
 
                 return [
+                    'id' => $reply->id,
                     'body' => $reply->body,
                     'image' => $reply->image ? asset('storage/' . $reply->image) : null,
                     'is_admin' => $reply->isFromAdmin(),
@@ -225,4 +236,26 @@ class TicketController extends Controller
         ]);
     }
 
+    /** Get unread counts for all relevant tickets. */
+    public function getUnreadCounts()
+    {
+        $user = Auth::user();
+        if ($user->role == 1) {
+            // Admin: counts of user replies (where admin_id is null)
+            $tickets = Ticket::withCount(['replies as unread_count' => function ($q) {
+                $q->whereNull('admin_id')->where('is_read', 0);
+            }])->get();
+        } else {
+            // User: counts of admin replies (where admin_id is not null)
+            $tickets = Ticket::where('user_id', $user->id)
+                ->withCount(['replies as unread_count' => function ($q) {
+                    $q->whereNotNull('admin_id')->where('is_read', 0);
+                }])->get();
+        }
+
+        return response()->json([
+            'success' => true,
+            'counts' => $tickets->pluck('unread_count', 'id')
+        ]);
+    }
 }

@@ -161,10 +161,17 @@
 @section('navbar-buttons')
     <a href="{{ route('admin.dashboard') }}" class="btn-create">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" />
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
         </svg>
         Dashboard
+    </a>
+        <a href="{{ route('admin.knowledge-base.index') }}" class="btn-create">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+        Manage KB
     </a>
     <a href="{{ route('admin.users.index') }}" class="btn-create">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

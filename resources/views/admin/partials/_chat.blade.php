@@ -276,7 +276,7 @@
                         <div class="unread-divider"><span>{{ $unreadReplies->count() }} New Coming</span></div>
                         @php $unreadShown = true; @endphp
                     @endif
-                    <div class="bubble {{ $bubbleClass }}">
+                    <div class="bubble {{ $bubbleClass }}" data-id="{{ $reply->id }}">
                         @if($reply->image)
                             <img src="{{ asset('storage/' . $reply->image) }}" class="bubble-image" onclick="openGlobalLightbox(this.src)" alt="Attachment">
                         @endif
@@ -346,7 +346,11 @@
         const previewWrap = document.getElementById('imagePreviewWrap');
         const previewImg = document.getElementById('imagePreview');
         const isUserContext = {{ (Auth::check() && Auth::user()->role != 1) ? 'true' : 'false' }};
+        const isSingleTicketView = {{ isset($ticket) ? 'true' : 'false' }};
         let currentTicketId = {{ isset($ticket) ? $ticket->id : 'null' }};
+        let lastMessageId = null;
+        let pollInterval = null;
+        let isSubmitting = false;
 
         // Auto-scroll helper
         window.scrollToBottom = (delay = 0) => {
@@ -363,7 +367,14 @@
         const scrollToBottom = window.scrollToBottom;
 
         if ({{ isset($isStatic) && $isStatic ? 'true' : 'false' }}) {
-            window.addEventListener('load', scrollToBottom);
+            window.addEventListener('load', () => {
+                scrollToBottom();
+                const lastBubble = chatMessages.querySelector('.bubble:last-child');
+                // We'll trust the initial load IDs if we need polling for static, 
+                // but usually static is just for the show page.
+                // For now, let's start polling even if static if there is a ticket.
+                if (currentTicketId) startPolling();
+            });
         }
 
         window.handleImageSelect = function(input) {
@@ -384,9 +395,124 @@
             previewImg.src = '';
         };
 
+        function startPolling() {
+            stopPolling();
+            pollInterval = setInterval(pollForNewMessages, 2000); // Faster polling for chat
+        }
+
+        function stopPolling() {
+            if (pollInterval) {
+                clearInterval(pollInterval);
+                pollInterval = null;
+            }
+        }
+
+        async function pollForNewMessages() {
+            if (!currentTicketId) return;
+
+            try {
+                // Ensure last_id is properly handled
+                const lastIdParam = lastMessageId ? `last_id=${lastMessageId}` : '';
+                const dataUrl = isUserContext 
+                    ? `/user/tickets/${currentTicketId}/chat-data?${lastIdParam}` 
+                    : `/admin/tickets/${currentTicketId}/chat-data?${lastIdParam}`;
+                
+                const response = await fetch(dataUrl);
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.replies && data.replies.length > 0) {
+                        appendMessages(data.replies);
+                    }
+                }
+            } catch (error) {
+                console.warn('Polling failed:', error);
+            }
+        }
+
+        async function pollGlobalUnreadCounts() {
+            try {
+                const response = await fetch('/tickets/unread-counts');
+                const data = await response.json();
+                if (data.success) {
+                    updateAllBadges(data.counts);
+                }
+            } catch (error) {
+                console.warn('Global unread poll failed:', error);
+            }
+        }
+
+        function updateAllBadges(counts) {
+            let totalUnread = 0;
+            
+            for (const [ticketId, count] of Object.entries(counts)) {
+                totalUnread += count;
+                
+                // Update dashboard badges
+                const badgeId = `unread-count-${ticketId}`;
+                let badge = document.getElementById(badgeId);
+                const row = document.querySelector(`tr[data-ticket-id="${ticketId}"]`);
+                
+                if (count > 0) {
+                    if (badge) {
+                        badge.textContent = count > 99 ? '99+' : count;
+                        badge.style.display = 'block';
+                    } else {
+                        // Try to find the chat button to append badge
+                        const chatBtn = document.querySelector(`tr[data-ticket-id="${ticketId}"] .action-btn-premium`);
+                        if (chatBtn) {
+                            chatBtn.insertAdjacentHTML('beforeend', `
+                                <span id="${badgeId}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light shadow-sm"
+                                      style="font-size: 0.66rem; padding: 0.24em 0.45em; line-height: 1;">
+                                    ${count > 99 ? '99+' : count}
+                                </span>
+                            `);
+                        }
+                    }
+                    if (row) row.classList.add('unread-row');
+                } else {
+                    if (badge) badge.style.display = 'none';
+                    if (row) row.classList.remove('unread-row');
+                }
+            }
+            
+            // Update floating button badge
+            let floatingBadge = document.getElementById('floatingChatBadge');
+            const floatingBtn = document.querySelector('.chat-floating-btn');
+            
+            // Determine which count to show on the floating messenger
+            let displayCount = totalUnread;
+            if (isSingleTicketView && currentTicketId) {
+                displayCount = counts[currentTicketId] || 0;
+            }
+
+            // Only show the floating badge if the count > 0 AND the chat is NOT currently open
+            if (displayCount > 0 && !container.classList.contains('active')) {
+                if (floatingBadge) {
+                    floatingBadge.textContent = displayCount > 99 ? '99+' : displayCount;
+                    floatingBadge.style.display = 'block';
+                } else if (floatingBtn) {
+                    floatingBtn.insertAdjacentHTML('beforeend', `
+                        <span class="chat-badge-bubble" id="floatingChatBadge">
+                            ${displayCount > 99 ? '99+' : displayCount}
+                        </span>
+                    `);
+                }
+            } else {
+                if (floatingBadge) floatingBadge.style.display = 'none';
+            }
+        }
+
+        // Start global polling
+        setInterval(pollGlobalUnreadCounts, 5000); // Faster Global polling (5s)
+        pollGlobalUnreadCounts(); // Initial check
+
         // Global function to open chat (used by dashboard)
         window.openAdminChat = async function(ticketId) {
             currentTicketId = ticketId;
+            lastMessageId = null;
+            stopPolling();
+            
             container.classList.add('active');
             chatMessages.innerHTML = '<div class="text-center py-5"><div class="text-muted small">Loading messages...</div></div>';
             
@@ -431,10 +557,15 @@
                     else statusBadge.classList.add('status-closed-lite');
 
                     renderMessages(data.replies, data.unread_count);
-                    // Scroll after a short delay to account for CSS transitions 
-                    // and ensure the DOM has fully updated
+                    
+                    if (data.replies.length > 0) {
+                        lastMessageId = data.replies[data.replies.length - 1].id;
+                    }
+                    
+                    startPolling();
+
                     scrollToBottom(50); 
-                    scrollToBottom(300); // Also scroll after transition usually finishes
+                    scrollToBottom(300);
                 }
             } catch (error) {
                 console.error('Failed to load chat data:', error);
@@ -444,6 +575,7 @@
 
         window.closeAdminChat = function() {
             container.classList.remove('active');
+            stopPolling();
         };
 
         function renderMessages(replies, unreadCount) {
@@ -452,29 +584,76 @@
                 return;
             }
 
-            chatMessages.innerHTML = replies.map(reply => {
-                const isMe = isUserContext ? !reply.is_admin : reply.is_admin;
-                const bubbleClass = isMe ? 'me' : 'them';
-                const senderLabel = isUserContext 
-                    ? (reply.is_admin ? (reply.sender || 'Support') : 'You')
-                    : (reply.is_admin ? (reply.sender || 'Admin') : (reply.sender || 'User'));
+            chatMessages.innerHTML = replies.map(reply => buildMessageHtml(reply, unreadCount)).join('');
+        }
 
-                return `
-                    ${reply.is_first_unread ? `<div class="unread-divider"><span>${unreadCount} New Coming</span></div>` : ''}
-                    <div class="bubble ${bubbleClass}">
-                        ${reply.image ? `<img src="${reply.image}" class="bubble-image" onload="window.scrollToBottom(50)" onclick="openGlobalLightbox(this.src)" alt="Attachment">` : ''}
-                        ${reply.body ? `<div class="bubble-content ${reply.image ? 'mt-1' : ''}">${reply.body}</div>` : ''}
-                        <div class="bubble-info">${senderLabel} · ${reply.time}</div>
-                    </div>
-                `;
-            }).join('');
+        function appendMessages(replies) {
+            if (!replies || replies.length === 0) return;
+
+            // Remove empty state message if it exists
+            const emptyState = chatMessages.querySelector('.text-center');
+            if (emptyState && emptyState.textContent.includes('No messages yet')) {
+                chatMessages.innerHTML = '';
+            }
+
+            let hasNew = false;
+            replies.forEach(reply => {
+                // Avoid duplicates using ID
+                if (reply.id && document.querySelector(`.bubble[data-id="${reply.id}"]`)) return;
+
+                const html = buildMessageHtml(reply);
+                chatMessages.insertAdjacentHTML('beforeend', html);
+                hasNew = true;
+                
+                // Only update lastMessageId if a valid ID is present
+                if (reply.id) {
+                    lastMessageId = reply.id;
+                }
+            });
+
+            if (hasNew) {
+                scrollToBottom(50);
+            }
+        }
+
+        // Click outside to close
+        document.addEventListener('mousedown', function(e) {
+            // Only handle if chat is floating and active
+            if (container.classList.contains('floating-chat') && container.classList.contains('active')) {
+                const floatingBtn = document.querySelector('.chat-floating-btn');
+                const isClickInside = container.contains(e.target);
+                const isClickOnBtn = floatingBtn && floatingBtn.contains(e.target);
+                
+                // If click is outside both the chat and the trigger button, close it
+                if (!isClickInside && !isClickOnBtn) {
+                    closeAdminChat();
+                }
+            }
+        });
+
+        function buildMessageHtml(reply, unreadCount = 0) {
+            const isMe = isUserContext ? !reply.is_admin : reply.is_admin;
+            const bubbleClass = isMe ? 'me' : 'them';
+            const senderLabel = isUserContext 
+                ? (reply.is_admin ? (reply.sender || 'Support') : 'You')
+                : (reply.is_admin ? (reply.sender || 'Admin') : (reply.sender || 'User'));
+
+            return `
+                ${reply.is_first_unread ? `<div class="unread-divider"><span>${unreadCount} New Coming</span></div>` : ''}
+                <div class="bubble ${bubbleClass}" data-id="${reply.id}">
+                    ${reply.image ? `<img src="${reply.image}" class="bubble-image" onload="window.scrollToBottom(50)" onclick="openGlobalLightbox(this.src)" alt="Attachment">` : ''}
+                    ${reply.body ? `<div class="bubble-content ${reply.image ? 'mt-1' : ''}">${reply.body}</div>` : ''}
+                    <div class="bubble-info">${senderLabel} · ${reply.time}</div>
+                </div>
+            `;
         }
 
         // AJAX Submission
         chatForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            if ((!chatInput.value.trim() && !imageInput.files.length) || !currentTicketId) return;
+            if (isSubmitting || (!chatInput.value.trim() && !imageInput.files.length) || !currentTicketId) return;
 
+            isSubmitting = true;
             const submitBtn = this.querySelector('.btn-send');
             const originalOpacity = submitBtn.style.opacity;
             submitBtn.disabled = true;
@@ -493,27 +672,10 @@
 
                 const data = await response.json();
                 if (data.success) {
-                    const isMe = isUserContext ? !data.reply.is_admin : data.reply.is_admin;
-                    const bubbleClass = isMe ? 'me' : 'them';
-                    const senderLabel = isUserContext 
-                        ? (data.reply.is_admin ? (data.reply.sender || 'Support') : 'You')
-                        : (data.reply.is_admin ? (data.reply.sender || 'Admin') : (data.reply.sender || 'User'));
-
-                    const bubbleHtml = `
-                        <div class="bubble ${bubbleClass}">
-                            ${data.reply.image ? `<img src="${data.reply.image}" class="bubble-image" onclick="openGlobalLightbox(this.src)" alt="Attachment">` : ''}
-                            ${data.reply.body ? `<div class="bubble-content ${data.reply.image ? 'mt-1' : ''}">${data.reply.body}</div>` : ''}
-                            <div class="bubble-info">${senderLabel} · ${data.reply.time}</div>
-                        </div>
-                    `;
+                    // Temporarily stop polling to prevent duplicate message if polling hits right now
+                    // actually, the last_id will handle it, but it's cleaner to just append
+                    appendMessages([data.reply]);
                     
-                    // Remove "No messages yet" if it exists
-                    if (chatMessages.querySelector('.text-center')) {
-                        chatMessages.innerHTML = '';
-                    }
-
-                    chatMessages.insertAdjacentHTML('beforeend', bubbleHtml);
-                    scrollToBottom();
                     chatInput.value = '';
                     chatInput.style.height = 'auto';
                     clearImagePreview();
@@ -530,6 +692,7 @@
                 console.error('Submission failed:', error);
                 alert('Connection error. Please try again.');
             } finally {
+                isSubmitting = false;
                 submitBtn.disabled = false;
                 submitBtn.style.opacity = originalOpacity || '1';
             }

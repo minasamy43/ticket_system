@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $closedTickets = Ticket::whereDate('created_at', $date)->where('status', 'closed')->count();
         $inProgress = Ticket::whereDate('created_at', $date)->where('status', 'in progress')->count();
 
-        $query = Ticket::with(['user', 'closer'])
+        $query = Ticket::with(['user', 'closer', 'inprogressBy'])
             ->withCount(['replies as unread_replies_count' => function ($query) {
                 $query->where('is_read', 0)->whereNull('admin_id');
             }])

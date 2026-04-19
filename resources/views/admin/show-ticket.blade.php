@@ -308,9 +308,17 @@
             </a>
 
             <div class="d-flex align-items-center gap-2 m-0">
+                @php
+                    $ticketOwnerId = $ticket->inprogress_by ?: $ticket->closed_by;
+                    $canReopen = !$ticketOwnerId || $ticketOwnerId == Auth::id();
+                @endphp
                 <select name="status" class="status-select-header"
                     onchange="updateTicketStatusLive({{ $ticket->id }}, this.value, this)">
-                    <option value="open" {{ $ticket->status === 'open' ? 'selected' : '' }}>Open 🎟️</option>
+                    <option value="open" {{ $ticket->status === 'open' ? 'selected' : '' }}
+                        {{ !$canReopen ? 'disabled' : '' }}
+                        {{ !$canReopen ? 'title="Only ' . ($ticket->inprogressBy->name ?? $ticket->closer->name ?? 'the assigned admin') . ' can reopen this ticket"' : '' }}>
+                        Open 🎟️
+                    </option>
                     <option value="in progress" {{ $ticket->status === 'in progress' ? 'selected' : '' }}>In Progress 👍🏻
                     </option>
                     <option value="closed" {{ $ticket->status === 'closed' ? 'selected' : '' }}>Closed ✅️</option>
@@ -448,7 +456,12 @@
     <script>
         // Live Ticket Auto-updater
         async function updateTicketStatusLive(ticketId, newStatus, selectElement) {
+            // Store previous value in case we need to revert
+            const previousValue = Array.from(selectElement.options).find(o => o.defaultSelected)?.value
+                || Array.from(selectElement.options).find(o => o.selected)?.value;
+
             selectElement.style.opacity = '0.5';
+            selectElement.disabled = true;
             try {
                 const response = await fetch(`/admin/tickets/${ticketId}/status`, {
                     method: 'POST',
@@ -463,6 +476,9 @@
                 const data = await response.json();
 
                 if (data.success) {
+                    // Mark the new value as the default (so future reverts use this)
+                    Array.from(selectElement.options).forEach(o => o.defaultSelected = (o.value === newStatus));
+
                     // Update the pill badge in the header dynamically
                     const mainPill = document.getElementById('mainStatusPill');
                     if (mainPill) {
@@ -484,13 +500,18 @@
                         window.updateChatStatusBadge(newStatus);
                     }
                 } else {
-                    alert('Error updating status: ' + data.message);
+                    // Revert the select back to the previous value
+                    selectElement.value = previousValue;
+                    alert('⚠️ ' + data.message);
                 }
             } catch (error) {
+                // Revert on network error too
+                selectElement.value = previousValue;
                 console.error('Status update failed:', error);
                 alert('Connection error. Please try again.');
             } finally {
                 selectElement.style.opacity = '1';
+                selectElement.disabled = false;
             }
         }
     </script>

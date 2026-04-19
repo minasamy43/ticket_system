@@ -1,8 +1,16 @@
 @extends('layouts.app')
 
 @section('title', 'Admin Dashboard')
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
 
 @section('navbar-buttons')
+    <a href="{{ route('admin.knowledge-base.index') }}" class="btn-create">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+        Manage KB
+    </a>
     <a href="{{ route('admin.users.index') }}" class="btn-create">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path
@@ -70,35 +78,6 @@
             }
         }
 
-        /* Unread Ticket Indicator */
-        .unread-indicator-dot {
-            width: 8px;
-            height: 8px;
-            background: #dc3545;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
-            box-shadow: 0 0 8px rgba(220, 53, 69, 0.6);
-            animation: pulse-soft 2s infinite;
-        }
-
-        @keyframes pulse-soft {
-            0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4);
-            }
-
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 6px rgba(220, 53, 69, 0);
-            }
-
-            100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
-            }
-        }
-
         .unread-row {
             background: linear-gradient(90deg, rgba(220, 53, 69, 0.04) 0%, transparent 30%);
         }
@@ -106,6 +85,15 @@
         .unread-row td {
             font-weight: 600 !important;
             color: #111 !important;
+        }
+
+        .new-entry-flash {
+            animation: flashRow 3s ease-out;
+        }
+
+        @keyframes flashRow {
+            0% { background-color: rgba(212, 175, 83, 0.15); }
+            100% { background-color: transparent; }
         }
 
         /* Royal Minimalist Cards */
@@ -246,8 +234,8 @@
             border-color: #edebe8ff !important;
         }
 
-        .table-bordered tbody tr:hover td {
-            background: rgba(212, 175, 83, 0.08) !important;
+        .table-bordered tbody tr:not(.empty-state-row):hover td {
+            background: rgba(0, 0, 0, 0.02) !important;
         }
 
         .action-btn-premium {
@@ -384,28 +372,6 @@
         </div>
 
         <div class="row g-4">
-            <!-- Total Tickets -->
-            <div class="col-12 col-sm-6 col-lg-3">
-                <div class="royal-card" style="--accent-color: #0d6efd; --icon-bg: rgba(13, 110, 253, 0.08);">
-                    <div class="royal-card-watermark">
-                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
-                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
-                            <path d="M12 11h4"></path>
-                            <path d="M12 16h4"></path>
-                            <path d="M8 11h.01"></path>
-                            <path d="M8 16h.01"></path>
-                        </svg>
-                    </div>
-
-                    <div class="royal-card-content">
-                        <div class="royal-card-title">Total Tickets</div>
-                        <div class="royal-card-value">{{ $totalTickets }}</div>
-                        <div class="royal-card-sub">All time requests</div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Open Tickets -->
             <div class="col-12 col-sm-6 col-lg-3">
@@ -424,7 +390,7 @@
 
                     <div class="royal-card-content">
                         <div class="royal-card-title">Open Tickets</div>
-                        <div class="royal-card-value">{{ $openTickets }}</div>
+                        <div class="royal-card-value" id="open-count">{{ $openTickets }}</div>
                         <div class="royal-card-sub">Awaiting response</div>
                     </div>
                 </div>
@@ -439,7 +405,7 @@
 
                     <div class="royal-card-content">
                         <div class="royal-card-title">In Progress</div>
-                        <div class="royal-card-value">{{ $inProgress }}</div>
+                        <div class="royal-card-value" id="progress-count">{{ $inProgress }}</div>
                         <div class="royal-card-sub">Being handled</div>
                     </div>
                 </div>
@@ -454,8 +420,31 @@
 
                     <div class="royal-card-content">
                         <div class="royal-card-title">Closed Tickets</div>
-                        <div class="royal-card-value">{{ $closedTickets }}</div>
+                        <div class="royal-card-value" id="closed-count">{{ $closedTickets }}</div>
                         <div class="royal-card-sub">Resolved & closed</div>
+                    </div>
+                </div>
+            </div>
+
+                        <!-- Total Tickets -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="royal-card" style="--accent-color: #0d6efd; --icon-bg: rgba(13, 110, 253, 0.08);">
+                    <div class="royal-card-watermark">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            <path d="M12 11h4"></path>
+                            <path d="M12 16h4"></path>
+                            <path d="M8 11h.01"></path>
+                            <path d="M8 16h.01"></path>
+                        </svg>
+                    </div>
+
+                    <div class="royal-card-content">
+                        <div class="royal-card-title">Total Tickets</div>
+                        <div class="royal-card-value" id="total-count">{{ $totalTickets }}</div>
+                        <div class="royal-card-sub">All time requests</div>
                     </div>
                 </div>
             </div>
@@ -475,7 +464,7 @@
                                     <th>In Progress By</th>
                                     <th>Closed By</th>
                                     <th>Date</th>
-                                    <th class="text-end">Action</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                                 <tr style="background: rgba(212, 175, 83, 0.02);">
                                     <td style="padding: 10px 15px;">
@@ -514,7 +503,7 @@
                                         <input type="date" name="date" class="inline-filter-input" value="{{ $date }}"
                                             onchange="document.getElementById('filterForm').submit()">
                                     </td>
-                                    <td class="text-end" style="padding: 10px 15px;">
+                                    <td class="text-center" style="padding: 10px 15px;">
                                         <a href="{{ route('admin.dashboard') }}" class="btn-clear-inline"
                                             title="Clear Filters">
                                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -531,26 +520,31 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($tickets as $ticket)
+                                @forelse($tickets as $ticket)
                                     <tr data-ticket-id="{{ $ticket->id }}"
                                         class="{{ !$ticket->has_admin_read ? 'unread-row' : '' }}">
                                         <td style="font-weight: 500;">
-                                            @if(!$ticket->has_admin_read)
-                                                <span class="unread-indicator-dot" title="New Message"></span>
-                                            @endif
                                             {{ $ticket->user->name ?? 'N/A' }}
                                         </td>
                                         <td>{{ $ticket->subject }}</td>
                                         <td>
+                                            @php
+                                                $ticketOwnerId = $ticket->inprogress_by ?: $ticket->closed_by;
+                                                $canReopen = !$ticketOwnerId || $ticketOwnerId == Auth::id();
+                                            @endphp
                                             <select
                                                 class="status-select-badge @if($ticket->status == 'open') status-open @elseif($ticket->status == 'in progress') status-progress @else status-closed @endif"
                                                 onchange="updateStatusLive({{ $ticket->id }}, this.value, this)">
-                                                <option value="open" @if($ticket->status == 'open') selected @endif>Open 🎟️
+                                                <option value="open"
+                                                    @if($ticket->status == 'open') selected @endif
+                                                    @if(!$canReopen) disabled title="Only {{ $ticket->inprogressBy->name ?? $ticket->closer->name ?? 'the assigned admin' }} can reopen this ticket" @endif>
+                                                    Open 🎟️
                                                 </option>
                                                 <option value="in progress" @if($ticket->status == 'in progress') selected @endif>
-                                                    In
-                                                    Progress 👍🏻</option>
-                                                <option value="closed" @if($ticket->status == 'closed') selected @endif>Closed ✅️
+                                                    In Progress 👍🏻
+                                                </option>
+                                                <option value="closed" @if($ticket->status == 'closed') selected @endif>
+                                                    Closed ✅️
                                                 </option>
                                             </select>
                                         </td>
@@ -581,7 +575,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-end">
+                                        <td class="text-center">
                                             @php
                                                 $msgCount = $ticket->unread_replies_count ?? 0;
                                             @endphp
@@ -609,7 +603,17 @@
                                             </a>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr class="empty-state-row">
+                                        <td colspan="7" class="text-center" style="padding: 4rem 1rem;">
+                                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                                <div style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">📭</div>
+                                                <h5 style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">All caught up!</h5>
+                                                <p style="color: #777; font-size: 0.95rem; margin-bottom: 0;">There are no tickets matching these filters to display.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -665,7 +669,7 @@
         };
 
         // Make table rows clickable
-        document.querySelectorAll('table tbody tr').forEach(row => {
+        document.querySelectorAll('table tbody tr:not(.empty-state-row)').forEach(row => {
             row.style.cursor = 'pointer';
             row.addEventListener('click', function (e) {
                 // Don't navigate if clicking on interactive elements
@@ -682,19 +686,17 @@
                     window.location.href = `/admin/tickets/${ticketId}`;
                 }
             });
-            // Add hover effect
-            row.addEventListener('mouseover', function () {
-                this.style.backgroundColor = 'rgba(212, 175, 83, 0.03)';
-            });
-            row.addEventListener('mouseout', function () {
-                this.style.backgroundColor = '';
-            });
         });
 
         // Live Status Update Logic
         async function updateStatusLive(ticketId, newStatus, selectElement) {
+            // Store previous value in case we need to revert
+            const previousValue = Array.from(selectElement.options).find(o => o.defaultSelected)?.value
+                || Array.from(selectElement.options).find(o => o.selected)?.value;
+
             // Visual feedback - temporary low opacity
             selectElement.style.opacity = '0.5';
+            selectElement.disabled = true;
 
             try {
                 const response = await fetch(`/admin/tickets/${ticketId}/status`, {
@@ -716,6 +718,9 @@
                     else if (newStatus === 'in progress') selectElement.classList.add('status-progress');
                     else if (newStatus === 'closed') selectElement.classList.add('status-closed');
 
+                    // Mark the new value as the default (so future reverts use this)
+                    Array.from(selectElement.options).forEach(o => o.defaultSelected = (o.value === newStatus));
+
                     // Update "In Progress By" and "Closed By" cells
                     const inprogressCell = document.getElementById(`inprogress-${ticketId}`);
                     if (inprogressCell && data.inprogress_by !== undefined) inprogressCell.textContent = data.inprogress_by;
@@ -723,15 +728,134 @@
                     const closerCell = document.getElementById(`closer-${ticketId}`);
                     if (closerCell && data.closer !== undefined) closerCell.textContent = data.closer;
                 } else {
-                    alert('Error updating status: ' + data.message);
+                    // Revert the select back to the previous value
+                    selectElement.value = previousValue;
+                    alert('⚠️ ' + data.message);
                 }
             } catch (error) {
+                // Revert on network error too
+                selectElement.value = previousValue;
                 console.error('Status update failed:', error);
                 alert('Connection error. Please try again.');
             } finally {
                 selectElement.style.opacity = '1';
+                selectElement.disabled = false;
             }
         }
+        // Real-time Ticket Discovery
+        let highestTicketId = {{ $tickets->first()->id ?? 0 }};
+        const currentFilters = {
+            date: '{{ request('date', now()->format('Y-m-d')) }}',
+            priority: '{{ request('priority') }}',
+            status: '{{ request('status') }}',
+            user_name: '{{ request('user_name') }}',
+            subject: '{{ request('subject') }}',
+            closer_name: '{{ request('closer_name') }}',
+            inprogress_name: '{{ request('inprogress_name') }}'
+        };
+
+        async function pollForNewTickets() {
+            try {
+                const params = new URLSearchParams({ ...currentFilters, last_id: highestTicketId });
+                const response = await fetch(`/admin/tickets/new-data?${params.toString()}`);
+                const data = await response.json();
+
+                if (data.success && data.new_tickets.length > 0) {
+                    appendNewTickets(data.new_tickets);
+                    highestTicketId = data.new_highest_id;
+                    updateSummaryCounts(data.counts);
+                }
+            } catch (error) {
+                console.warn('Discovery poll failed:', error);
+            }
+        }
+
+        function appendNewTickets(tickets) {
+            const tbody = document.querySelector('table tbody');
+            const emptyRow = tbody.querySelector('.empty-state-row');
+            if (emptyRow) emptyRow.remove();
+
+            tickets.forEach(ticket => {
+                const row = document.createElement('tr');
+                row.setAttribute('data-ticket-id', ticket.id);
+                row.className = 'unread-row new-entry-flash';
+                row.style.cursor = 'pointer';
+                
+                // Add click listener to new row
+                row.addEventListener('click', function(e) {
+                    const isInteractive = e.target.closest('a, button, input, select, .status-select-badge');
+                    if (!isInteractive) window.location.href = `/admin/tickets/${ticket.id}`;
+                });
+
+                row.innerHTML = `
+                    <td style="font-weight: 500;">${ticket.user_name}</td>
+                    <td>${ticket.subject}</td>
+                    <td>
+                        <select class="status-select-badge ${ticket.status === 'open' ? 'status-open' : (ticket.status === 'closed' ? 'status-closed' : 'status-progress')}"
+                                onchange="updateStatusLive(${ticket.id}, this.value, this)">
+                            <option value="open" ${ticket.status === 'open' ? 'selected' : ''}>Open 🎟️</option>
+                            <option value="in progress" ${ticket.status === 'in progress' ? 'selected' : ''}>In Progress 👍🏻</option>
+                            <option value="closed" ${ticket.status === 'closed' ? 'selected' : ''}>Closed ✅️</option>
+                        </select>
+                    </td>
+                    <td class="text-muted" id="inprogress-${ticket.id}">${ticket.inprogress_by}</td>
+                    <td class="text-muted" id="closer-${ticket.id}">${ticket.closer}</td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="color:#d4af53; flex-shrink:0;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                                </svg>
+                            </span>
+                            <div>
+                                <div style="font-weight:600; color:#333; font-size:0.88rem; line-height:1.2;">${ticket.time}</div>
+                                <div style="font-size:0.72rem; color:#aaa; margin-top:2px;">${ticket.relative_time}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0)" onclick="openAdminChat(${ticket.id})" class="action-btn-premium position-relative" title="Chat">
+                            <svg viewBox="0 0 256 256" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                                <path fill="url(#messenger-grad)" d="M128,24C68.9,24,21,68.6,21,123.5c0,31.2,15.7,58.5,40.1,76.5c1.4,1,2.5,2.6,2.8,4.3l3.8,27.3c0.4,3,3.7,4.8,6.4,3.3l29.1-14.9c1-0.5,2.2-0.6,3.2-0.3c7.2,1.8,14.8,2.7,22.7,2.7c59.1,0,107-44.6,107-99.5S187.1,24,128,24z M138.8,148v-0.1l-25.5-27c-4-4.2-10.6-4.5-15.1-0.5l-31.5,28.5c-3,2.7-7.2-0.8-5.2-4.1l29.4-48c3.2-5.3,10.6-6.6,15.5-2.8l25.3,19.3c3.8,2.9,9.3,3.3,13.5-0.1l32-26.1c3-2.5,7,1,5.2,4.3L153,141.5C149.8,146.9,142.5,148.6,138.8,148z" />
+                            </svg>
+                            ${ticket.unread_replies_count > 0 ? `
+                                <span id="unread-count-${ticket.id}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light shadow-sm"
+                                      style="font-size: 0.66rem; padding: 0.24em 0.45em; line-height: 1;">
+                                    ${ticket.unread_replies_count > 99 ? '99+' : ticket.unread_replies_count}
+                                </span>
+                            ` : ''}
+                        </a>
+                    </td>
+                `;
+                
+                tbody.insertBefore(row, tbody.firstChild);
+            });
+        }
+
+        function updateSummaryCounts(counts) {
+            updateValueWithEffect('open-count', counts.open);
+            updateValueWithEffect('progress-count', counts.in_progress);
+            updateValueWithEffect('closed-count', counts.closed);
+            updateValueWithEffect('total-count', counts.total);
+        }
+
+        function updateValueWithEffect(id, newValue) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const currentVal = parseInt(el.textContent);
+            if (currentVal !== newValue) {
+                el.style.transform = 'scale(1.2)';
+                el.style.color = '#d4af53';
+                setTimeout(() => {
+                    el.textContent = newValue;
+                    el.style.transform = 'scale(1)';
+                    el.style.color = '';
+                }, 300);
+            }
+        }
+
+        // Start discovery poll
+        setInterval(pollForNewTickets, 10000); // Check every 10 seconds
     </script>
 
 @endsection
