@@ -466,7 +466,8 @@
     .table-responsive {
       scrollbar-width: thin;
       scrollbar-color: rgba(212, 175, 83, 0.4) transparent;
-      padding-bottom: 5px; /* Space for scrollbar */
+      padding-bottom: 5px;
+      /* Space for scrollbar */
     }
 
     .table-responsive::-webkit-scrollbar {
