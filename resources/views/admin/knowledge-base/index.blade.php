@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Knowledge Base')
 
 @section('navbar-buttons')
     <a href="{{ route('admin.dashboard') }}" class="btn-create">

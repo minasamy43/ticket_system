@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', $category->title . ' - Knowledge Base')
-
 @section('navbar-buttons')
     @if(Auth::user()->role == 1)
         <a href="{{ route('admin.dashboard') }}" class="btn-create">

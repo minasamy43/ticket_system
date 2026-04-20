@@ -9,10 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="icon" type="image/png" href="{{ asset('img/HelpTK--.png') }}">
-  @stack('styles')
-</head>
-
-<body>
+  <link rel="preload" as="image" href="{{ asset('img/HelpTK-.png') }}">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap');
 
@@ -408,13 +405,78 @@
       letter-spacing: 0.02em;
     }
   </style>
+<style>
+    /* Global Lightbox */
+    .lb-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 99999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .lb-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .lb-content {
+      position: relative;
+      max-width: 95%;
+      max-height: 95%;
+      transform: scale(0.9);
+      transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .lb-overlay.active .lb-content {
+      transform: scale(1);
+    }
+
+    .lb-img {
+      border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .lb-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      cursor: pointer;
+      padding: .5rem;
+      line-height: 1;
+      transition: color .2s;
+    }
+
+    .lb-close:hover {
+      color: #facc15;
+    }
+  </style>
+  @stack('styles')
+</head>
+
+<body>
+  
 
   <nav class="navbar-pro">
     <div class="container-fluid">
       <a class="brand-wrapper"
         href="{{ Auth::user()->role == 1 ? route('admin.dashboard') : route('user.dashboard') }}">
         <div class="brand-logo-wrap">
-          <img src="{{ asset('img/HelpTK-.png') }}" alt="Logo">
+          <img src="{{ asset('img/HelpTK-.png') }}" alt="Logo" width="115" height="115">
         </div>
         <div class="brand-divider"></div>
         <span class="brand-title">Support Ticket System</span>
@@ -538,66 +600,7 @@
     </div>
   </footer>
 
-  <style>
-    /* Global Lightbox */
-    .lb-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      z-index: 99999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-
-    .lb-overlay.active {
-      display: flex;
-      opacity: 1;
-    }
-
-    .lb-content {
-      position: relative;
-      max-width: 95%;
-      max-height: 95%;
-      transform: scale(0.9);
-      transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .lb-overlay.active .lb-content {
-      transform: scale(1);
-    }
-
-    .lb-img {
-      border-radius: 12px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      max-width: 100%;
-      max-height: 90vh;
-      object-fit: contain;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .lb-close {
-      position: absolute;
-      top: -40px;
-      right: 0;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-      padding: .5rem;
-      line-height: 1;
-      transition: color .2s;
-    }
-
-    .lb-close:hover {
-      color: #facc15;
-    }
-  </style>
+  
 
   {{-- Global Lightbox Overlay --}}
   <div id="globalLightbox" class="lb-overlay" onclick="closeGlobalLightbox(event)">

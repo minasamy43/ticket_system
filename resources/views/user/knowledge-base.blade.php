@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Knowledge Base')
 
 @section('navbar-buttons')
     @if(Auth::user()->role == 1)
