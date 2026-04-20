@@ -70,8 +70,6 @@
       height: 115px;
       object-fit: contain;
       display: block;
-      /* mix-blend-mode: lighten;  Makes white bg disappear on dark navbar */
-      /* filter: drop-shadow(0 0 6px rgba(212, 175, 83, 0.2));  Subtle gold glow */
     }
 
     .brand-divider {
@@ -404,8 +402,7 @@
       font-weight: 400;
       letter-spacing: 0.02em;
     }
-  </style>
-<style>
+
     /* Global Lightbox */
     .lb-overlay {
       position: fixed;
@@ -464,12 +461,40 @@
     .lb-close:hover {
       color: #facc15;
     }
+
+    /* Custom Scrollbar for Responsive Tables */
+    .table-responsive {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(212, 175, 83, 0.4) transparent;
+      padding-bottom: 5px; /* Space for scrollbar */
+    }
+
+    .table-responsive::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+      background: rgba(212, 175, 83, 0.35);
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background-clip: content-box;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+      background: rgba(212, 175, 83, 0.6);
+      background-clip: content-box;
+    }
   </style>
   @stack('styles')
 </head>
 
 <body>
-  
+
 
   <nav class="navbar-pro">
     <div class="container-fluid">
@@ -600,7 +625,7 @@
     </div>
   </footer>
 
-  
+
 
   {{-- Global Lightbox Overlay --}}
   <div id="globalLightbox" class="lb-overlay" onclick="closeGlobalLightbox(event)">
@@ -647,15 +672,6 @@
           if (menu.classList.contains('active')) {
             svg.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
           } else {
-            svg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
-          }
-        });
-
-        // Close menu when clicking outside
-        document.addEventListener('click', function (e) {
-          if (!menu.contains(e.target) && !toggle.contains(e.target)) {
-            menu.classList.remove('active');
-            const svg = toggle.querySelector('svg');
             svg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
           }
         });

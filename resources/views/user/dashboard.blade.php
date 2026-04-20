@@ -198,8 +198,8 @@
 
             <div class="card-body p-0">
                 <form method="GET" action="{{ route('user.dashboard') }}" id="filterForm"></form>
-                <div class="table-responsive" style="overflow: visible;">
-                    <table class="table table-bordered mb-0">
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0" style="min-width: 800px;">
                         <thead>
                             <tr>
                                 <th>Subject</th>

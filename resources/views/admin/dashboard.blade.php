@@ -454,8 +454,8 @@
         <div class="card mt-4 shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
             <div class="card-body p-0">
                 <form method="GET" action="{{ route('admin.dashboard') }}" id="filterForm">
-                    <div class="table-responsive" style="overflow: visible;">
-                        <table class="table table-bordered mb-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0" style="min-width: 900px;">
                             <thead>
                                 <tr>
                                     <th>User</th>
