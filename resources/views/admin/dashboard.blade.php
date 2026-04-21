@@ -358,16 +358,17 @@
 
     <div class="container mt-4">
 
-        <div class="mb-5">
+        <div class="mb-5 text-center text-md-start">
             <h2 style="font-family: 'Playfair Display', serif; font-weight: 600; color: #0a0a0a; margin-bottom: 4px;">
                 👋 Welcome, <span style="color: #d4af53;">{{ Auth::user()->name }}</span>
             </h2>
-            <p style="color: #666; margin-top: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 12px;">
+            <p style="color: #666; margin-top: 15px; font-size: 0.95rem; gap: 12px; flex-wrap: wrap;"
+               class="d-flex align-items-center justify-content-center justify-content-md-start text-center text-md-start">
                 <span
                     style="font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: #0d9488; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: rgba(13, 148, 136, 0.08); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(13, 148, 136, 0.2); box-shadow: 0 2px 8px rgba(13, 148, 136, 0.05); white-space: nowrap;">
                     <span style="margin-right: 4px;">🛡️</span> Technical
                 </span>
-                Monitor tickets, manage users, and view system analytics below.
+                <span>Monitor tickets, manage users, and view system analytics below.</span>
             </p>
         </div>
 
@@ -604,20 +605,22 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr class="empty-state-row">
-                                        <td colspan="7" class="text-center" style="padding: 4rem 1rem;">
-                                            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                                <div style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">📭</div>
-                                                <h5 style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">All caught up!</h5>
-                                                <p style="color: #777; font-size: 0.95rem; margin-bottom: 0;">There are no tickets matching these filters to display.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <tr class="empty-state-row" style="display: none;"></tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                 </form>
+
+                @if($tickets->isEmpty())
+                    <div class="empty-state-container text-center w-100" style="padding: 4rem 1rem; background: #fff;">
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">📭</div>
+                            <h5 style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">All caught up!</h5>
+                            <p style="color: #777; font-size: 0.95rem; margin-bottom: 0;">There are no tickets matching these filters to display.</p>
+                        </div>
+                    </div>
+                @endif
 
                 {{-- Pagination inside the card-body --}}
                 @if($tickets->hasPages())
@@ -773,6 +776,8 @@
         function appendNewTickets(tickets) {
             const tbody = document.querySelector('table tbody');
             const emptyRow = tbody.querySelector('.empty-state-row');
+            const emptyContainer = document.querySelector('.empty-state-container');
+            if (emptyContainer) emptyContainer.remove();
             if (emptyRow) emptyRow.remove();
 
             tickets.forEach(ticket => {

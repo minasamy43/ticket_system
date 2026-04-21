@@ -144,16 +144,17 @@
     <div class="container mt-4">
 
         <div class="row align-items-center mb-5">
-            <div class="col-lg-8">
+            <div class="col-lg-8 mb-4 mb-lg-0 text-center text-lg-start">
                 <h2 style="font-family: 'Playfair Display', serif; font-weight: 600; color: #0a0a0a; margin-bottom: 4px;">
                     👋 Welcome, <span style="color: #d4af53;">{{ Auth::user()->name }}</span>
                 </h2>
-                <p style="color: #666; margin-top: 15px; font-size: 0.95rem; display: flex; align-items: center; gap: 12px;">
+                <p class="d-flex align-items-center justify-content-center justify-content-lg-start text-center text-lg-start"
+                   style="color: #666; margin-top: 15px; font-size: 0.95rem; gap: 12px; flex-wrap: wrap;">
                     <span
                         style="font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: #3b6fd4; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: rgba(59, 111, 212, 0.07); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(59, 111, 212, 0.12); box-shadow: 0 2px 5px rgba(59, 111, 212, 0.05); white-space: nowrap;">
                         <span style="margin-right: 4px;">👤</span> User
                     </span>
-                    Manage your support tickets and track their status below.
+                    <span>Manage your support tickets and track their status below.</span>
                 </p>
             </div>
             <div class="col-lg-4 text-lg-end">
@@ -339,32 +340,27 @@
                                     </td>
                                 </tr>
                             @empty
-                                <tr class="empty-state-row">
-                                    <td colspan="5" class="text-center" style="padding: 4rem 1rem;">
-                                        <div
-                                            style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                                            <div
-                                                style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">
-                                                📭</div>
-                                            <h5
-                                                style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">
-                                                It's quiet here!</h5>
-                                            <p style="color: #777; font-size: 0.95rem; margin-bottom: 1.5rem;">You haven't
-                                                submitted any tickets matching this filter.</p>
-                                            <a href="{{ route('tickets.create') }}" class="btn-create"
-                                                style="text-decoration: none;">
-                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                                    <path d="M12 5v14M5 12h14" />
-                                                </svg>
-                                                Create Your First Ticket
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <tr class="empty-state-row" style="display: none;"></tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+
+                @if($tickets->isEmpty())
+                    <div class="empty-state-container text-center w-100" style="padding: 4rem 1rem; background: #fff; border-radius: 0 0 16px 16px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">📭</div>
+                            <h5 style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">It's quiet here!</h5>
+                            <p style="color: #777; font-size: 0.95rem; margin-bottom: 1.5rem;">You haven't submitted any tickets matching this filter.</p>
+                            <a href="{{ route('tickets.create') }}" class="btn-create" style="text-decoration: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M12 5v14M5 12h14" />
+                                </svg>
+                                Create Your First Ticket
+                            </a>
+                        </div>
+                    </div>
+                @endif
 
                 {{-- Pagination inside the card-body --}}
                 @if ($tickets->hasPages())
