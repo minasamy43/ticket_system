@@ -294,6 +294,68 @@
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
             border-color: rgba(212, 175, 83, 0.4);
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .premium-card {
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
+
+            .ticket-title {
+                font-size: 1.6rem;
+            }
+
+            .orig-request-box {
+                padding: 1.5rem;
+                margin-top: 2rem;
+            }
+
+            .meta-grid {
+                gap: 1.25rem;
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
+            }
+
+            .meta-value-premium {
+                font-size: 0.9rem;
+            }
+
+            .orig-request-text {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tk-wrap {
+                margin: 1rem 0;
+            }
+
+            .tk-wrap .d-flex.justify-content-between.align-items-center {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 10px;
+            }
+
+            .btn-back-premium {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .status-select-header {
+                width: 100%;
+            }
+
+            .main-card .d-flex.justify-content-between.align-items-start {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .status-pill-premium {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 
     <div class="tk-wrap">
