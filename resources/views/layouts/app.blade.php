@@ -32,7 +32,7 @@
       padding: 0 0;
       font-family: 'DM Sans', sans-serif;
       position: relative;
-      z-index: 2002; /* Ensure navbar is above overlay or consistently stacked */
+      z-index: 1000;
     }
 
     .navbar-gold-line {
@@ -276,121 +276,119 @@
     @media (max-width: 991px) {
       .mobile-toggle {
         display: block;
-        z-index: 1002;
         position: relative;
+        z-index: 1200;
+        background: rgba(212, 175, 83, 0.08);
+        border: 1px solid rgba(212, 175, 83, 0.2);
+        border-radius: 12px;
       }
 
       .nav-actions {
         position: fixed;
         top: 0;
-        right: -300px;
+        right: 0;
+        bottom: 0;
         width: 280px;
         height: 100vh;
-        background: #1a1a1a;
+        background: rgba(20, 20, 20, 0.98);
         backdrop-filter: blur(25px);
         -webkit-backdrop-filter: blur(25px);
         flex-direction: column;
-        padding: 85px 1.2rem 2rem;
-        gap: 8px;
-        border-left: 1px solid rgba(212, 175, 83, 0.2);
-        z-index: 2001; /* High z-index to be above overlay */
-        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        box-shadow: -15px 0 45px rgba(0, 0, 0, 0.6);
-        display: flex;
-        visibility: visible;
+        padding: 40px 1.8rem 2rem;
+        gap: 0;
+        transform: translateX(100%);
         opacity: 1;
-        transform: none;
-        margin: 0;
-        overflow-y: auto; /* Allow scrolling if many items */
-        align-items: flex-start; /* Better alignment for vertical list */
+        visibility: visible;
+        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        box-shadow: -15px 0 35px rgba(0, 0, 0, 0.5);
+        z-index: 1100;
+        display: flex !important;
+        border-left: 1px solid rgba(212, 175, 83, 0.1);
       }
 
       .nav-actions.active {
-        right: 0;
+        transform: translateX(0);
       }
 
-      .menu-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(5px);
-        -webkit-backdrop-filter: blur(5px);
-        z-index: 2000; /* Just below the nav-actions */
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-      }
-
-      .menu-overlay.active {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      .nav-actions .admin-tab {
+      /* Drawer Header Styles */
+      .drawer-header {
+        display: flex !important;
+        justify-content: space-between;
+        align-items: center;
         width: 100%;
-        padding: 12px 16px;
-        border-bottom: none;
-        border-left: 3px solid transparent;
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 8px;
-        font-size: 0.95rem;
+        margin-bottom: 30px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .drawer-user-name {
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.05rem;
+        margin-bottom: 2px;
+        font-family: 'Playfair Display', serif;
+      }
+
+      .drawer-user-role {
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.75rem;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .logout-icon-btn {
+        background: rgba(255, 255, 255, 0.05);
+        color: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        justify-content: center;
+        transition: all 0.2s;
       }
 
-      .nav-actions .admin-tab.active {
-        border-left-color: #d4af53;
-        background: rgba(212, 175, 83, 0.1);
-        color: #d4af53;
-      }
-
-      .nav-actions .admin-tab svg {
-        width: 18px;
-        height: 18px;
+      .logout-icon-btn:hover {
+        color: #ff6b6b;
+        background: rgba(255, 107, 107, 0.1);
       }
 
       .nav-actions .d-flex {
         flex-direction: column;
+        align-items: flex-start !important;
         width: 100%;
         gap: 8px !important;
-        margin-bottom: 5px;
-        align-items: stretch !important; /* Make tabs full width */
+        margin: 0 0 20px 0 !important;
       }
 
-      .nav-actions form {
+      .admin-tab {
         width: 100%;
-        margin-top: auto !important;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-      }
-
-      .btn-create,
-      .btn-logout {
-        width: 100%;
-        justify-content: center;
-        padding: 12px;
+        padding: 8px 12px;
+        border-radius: 0;
+        border-bottom: none;
+        border-left: 2px solid transparent;
+        background: transparent;
         font-size: 0.9rem;
-        border-radius: 10px;
+        color: rgba(255, 255, 255, 0.6);
       }
 
-      .btn-logout {
-        background: rgba(255, 255, 255, 0.05);
+      .admin-tab.active {
+        background: transparent;
+        color: #d4af53;
+        border-left-color: #d4af53;
+        padding-left: 15px;
       }
 
-      /* User special create ticket button in mobile drawer */
-      .nav-actions a[href*="tickets/create"] {
-        width: 100% !important;
-        margin-right: 0 !important;
-        padding: 12px !important;
-        justify-content: center !important;
-        font-size: 0.9rem !important;
-        border-radius: 10px !important;
-      }
-
-      /* Divider in mobile menu */
-      .nav-actions div[style*="width: 1px"] {
+      .nav-actions .desktop-logout {
         display: none !important;
+      }
+
+      .btn-create {
+        width: 100% !important;
+        margin: 15px 0 0 0 !important;
+        justify-content: center;
+        padding: 10px !important;
+        font-size: 0.85rem !important;
       }
     }
 
@@ -591,6 +589,24 @@
 
       <div class="nav-actions" id="navActions">
         @auth
+          <!-- Mobile Header (Username & Logout Icon) -->
+          <div class="drawer-header d-lg-none">
+            <div>
+              <div class="drawer-user-name">{{ Auth::user()->name }}</div>
+              <div class="drawer-user-role">{{ Auth::user()->role == 1 ? 'Administrator' : 'Support User' }}</div>
+            </div>
+            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
+              @csrf
+              <button type="submit" class="logout-icon-btn" aria-label="Logout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+              </button>
+            </form>
+          </div>
+
           @if(Auth::user()->role == 1)
             <!-- Admin Navbar (Minimalist Tabs) -->
             <div class="d-flex align-items-center gap-4 me-3">
@@ -627,9 +643,9 @@
               </a>
             </div>
 
-            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
+            <div class="d-none d-lg-block" style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
 
-            <form method="POST" action="{{ route('logout') }}" style="margin:0; margin-left: 5px;">
+            <form method="POST" action="{{ route('logout') }}" class="desktop-logout" style="margin:0; margin-left: 5px;">
               @csrf
               <button type="submit" class="btn-logout" style="border: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -664,9 +680,9 @@
               Create Ticket
             </a>
 
-            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
+            <div class="d-none d-lg-block" style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
 
-            <form method="POST" action="{{ route('logout') }}" style="margin:0; margin-left: 5px;">
+            <form method="POST" action="{{ route('logout') }}" class="desktop-logout" style="margin:0; margin-left: 5px;">
               @csrf
               <button type="submit" class="btn-logout" style="border: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -699,7 +715,6 @@
   </footer>
 
 
-  <div class="menu-overlay" id="menuOverlay"></div>
 
   {{-- Global Lightbox Overlay --}}
   <div id="globalLightbox" class="lb-overlay" onclick="closeGlobalLightbox(event)">
@@ -735,38 +750,18 @@
     document.addEventListener('DOMContentLoaded', function () {
       const toggle = document.getElementById('navbarToggle');
       const menu = document.getElementById('navActions');
-      const overlay = document.getElementById('menuOverlay');
 
-      if (toggle && menu && overlay) {
-        function toggleMenu() {
+      if (toggle && menu) {
+        toggle.addEventListener('click', function (e) {
+          e.stopPropagation();
           menu.classList.toggle('active');
-          overlay.classList.toggle('active');
-          
-          const isOpen = menu.classList.contains('active');
-          document.body.style.overflow = isOpen ? 'hidden' : '';
 
           // Toggle icon
           const svg = toggle.querySelector('svg');
-          if (isOpen) {
+          if (menu.classList.contains('active')) {
             svg.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
           } else {
             svg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
-          }
-        }
-
-        toggle.addEventListener('click', function (e) {
-          e.stopPropagation();
-          toggleMenu();
-        });
-
-        overlay.addEventListener('click', function () {
-          toggleMenu();
-        });
-
-        // Close on ESC
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && menu.classList.contains('active')) {
-            toggleMenu();
           }
         });
       }
