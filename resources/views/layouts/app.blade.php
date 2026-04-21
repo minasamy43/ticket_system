@@ -32,7 +32,7 @@
       padding: 0 0;
       font-family: 'DM Sans', sans-serif;
       position: relative;
-      z-index: 1000;
+      z-index: 2002; /* Ensure navbar is above overlay or consistently stacked */
     }
 
     .navbar-gold-line {
@@ -276,49 +276,121 @@
     @media (max-width: 991px) {
       .mobile-toggle {
         display: block;
+        z-index: 1002;
+        position: relative;
       }
 
       .nav-actions {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: rgba(45, 45, 45, 0.98);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 280px;
+        height: 100vh;
+        background: #1a1a1a;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
         flex-direction: column;
-        padding: 1.5rem;
-        gap: 12px;
-        border-top: 1px solid rgba(212, 175, 83, 0.15);
-        transform: translateY(-10px);
-        opacity: 0;
-        visibility: hidden;
+        padding: 85px 1.2rem 2rem;
+        gap: 8px;
+        border-left: 1px solid rgba(212, 175, 83, 0.2);
+        z-index: 2001; /* High z-index to be above overlay */
         transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        box-shadow: -15px 0 45px rgba(0, 0, 0, 0.6);
+        display: flex;
+        visibility: visible;
+        opacity: 1;
+        transform: none;
+        margin: 0;
+        overflow-y: auto; /* Allow scrolling if many items */
+        align-items: flex-start; /* Better alignment for vertical list */
       }
 
       .nav-actions.active {
-        transform: translateY(0);
+        right: 0;
+      }
+
+      .menu-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        z-index: 2000; /* Just below the nav-actions */
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+
+      .menu-overlay.active {
         opacity: 1;
         visibility: visible;
       }
 
+      .nav-actions .admin-tab {
+        width: 100%;
+        padding: 12px 16px;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-actions .admin-tab.active {
+        border-left-color: #d4af53;
+        background: rgba(212, 175, 83, 0.1);
+        color: #d4af53;
+      }
+
+      .nav-actions .admin-tab svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .nav-actions .d-flex {
+        flex-direction: column;
+        width: 100%;
+        gap: 8px !important;
+        margin-bottom: 5px;
+        align-items: stretch !important; /* Make tabs full width */
+      }
+
       .nav-actions form {
         width: 100%;
+        margin-top: auto !important;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
       }
 
       .btn-create,
       .btn-logout {
         width: 100%;
         justify-content: center;
-        padding: 8px;
-        font-size: 0.8rem;
+        padding: 12px;
+        font-size: 0.9rem;
         border-radius: 10px;
       }
 
       .btn-logout {
-        margin-top: 4px;
         background: rgba(255, 255, 255, 0.05);
+      }
+
+      /* User special create ticket button in mobile drawer */
+      .nav-actions a[href*="tickets/create"] {
+        width: 100% !important;
+        margin-right: 0 !important;
+        padding: 12px !important;
+        justify-content: center !important;
+        font-size: 0.9rem !important;
+        border-radius: 10px !important;
+      }
+
+      /* Divider in mobile menu */
+      .nav-actions div[style*="width: 1px"] {
+        display: none !important;
       }
     }
 
@@ -627,6 +699,7 @@
   </footer>
 
 
+  <div class="menu-overlay" id="menuOverlay"></div>
 
   {{-- Global Lightbox Overlay --}}
   <div id="globalLightbox" class="lb-overlay" onclick="closeGlobalLightbox(event)">
@@ -662,18 +735,38 @@
     document.addEventListener('DOMContentLoaded', function () {
       const toggle = document.getElementById('navbarToggle');
       const menu = document.getElementById('navActions');
+      const overlay = document.getElementById('menuOverlay');
 
-      if (toggle && menu) {
-        toggle.addEventListener('click', function (e) {
-          e.stopPropagation();
+      if (toggle && menu && overlay) {
+        function toggleMenu() {
           menu.classList.toggle('active');
+          overlay.classList.toggle('active');
+          
+          const isOpen = menu.classList.contains('active');
+          document.body.style.overflow = isOpen ? 'hidden' : '';
 
           // Toggle icon
           const svg = toggle.querySelector('svg');
-          if (menu.classList.contains('active')) {
+          if (isOpen) {
             svg.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
           } else {
             svg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
+          }
+        }
+
+        toggle.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleMenu();
+        });
+
+        overlay.addEventListener('click', function () {
+          toggleMenu();
+        });
+
+        // Close on ESC
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && menu.classList.contains('active')) {
+            toggleMenu();
           }
         });
       }
