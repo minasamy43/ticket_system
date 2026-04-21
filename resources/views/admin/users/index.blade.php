@@ -346,7 +346,7 @@
                         @foreach ($users as $user)
                             <tr style="animation: slideUp {{ 0.3 + ($loop->index * 0.05) }}s ease forwards;">
                                 <td data-label="ID">
-                                    <span class="text-muted fw-bold">#{{ $user->id }}</span>
+                                    <span class="text-muted fw-bold">{{ $user->id }}</span>
                                 </td>
                                 <td data-label="User">
                                     <div class="d-flex align-items-center">
