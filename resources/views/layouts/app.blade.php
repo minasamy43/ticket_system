@@ -642,8 +642,8 @@
         <div class="brand-logo-wrap">
           <img src="{{ asset('img/HelpTK-.png') }}" alt="Logo" width="115" height="115">
         </div>
-        <div class="brand-divider"></div>
-        <span class="brand-title">Support Ticket System</span>
+        <div class="brand-divider d-lg-none"></div>
+        <span class="brand-title d-lg-none">Support Ticket System</span>
       </a>
 
       <button class="mobile-toggle" id="navbarToggle" aria-label="Toggle navigation">
@@ -663,7 +663,7 @@
           </svg>
         </button>
         @auth
-          <div class="drawer-user-header">
+          <div class="drawer-user-header d-lg-none">
             <div class="drawer-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
             <div class="drawer-user-info">
               <span class="drawer-username">{{ Auth::user()->name }}</span>

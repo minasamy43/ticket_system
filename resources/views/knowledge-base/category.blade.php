@@ -179,6 +179,38 @@
             border-radius: 8px;
             margin: 1rem 0;
         }
+
+        @media (max-width: 768px) {
+            .kb-container {
+                padding: 1.5rem 1rem;
+            }
+            .cat-hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+                gap: 1rem;
+            }
+            .cat-icon-wrap {
+                width: 70px;
+                height: 70px;
+                font-size: 2.2rem;
+            }
+            .cat-hero h1 {
+                font-size: 1.7rem;
+            }
+          
+            .back-link {
+                justify-content: center;
+                display: flex;
+                margin-bottom: 1.5rem;
+            }
+            .article-item {
+                padding: 1.2rem;
+            }
+            .article-title {
+                font-size: 1rem;
+            }
+        }
     </style>
 
     <script>

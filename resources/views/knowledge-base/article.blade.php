@@ -139,11 +139,27 @@
         }
 
         @media (max-width: 768px) {
+            .kb-container {
+                padding: 1.5rem 1rem;
+            }
             .article-content-wrapper {
-                padding: 2rem 1.5rem;
+                padding: 2rem 1.25rem;
+                border-radius: 16px;
+            }
+            .article-header {
+                text-align: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1.5rem;
             }
             .article-header h1 {
-                font-size: 2rem;
+                font-size: 1.85rem;
+                line-height: 1.3;
+            }
+          
+            .back-link {
+                justify-content: center;
+                display: flex;
+                margin-bottom: 1.5rem;
             }
         }
     </style>
