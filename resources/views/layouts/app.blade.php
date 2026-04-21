@@ -256,8 +256,8 @@
       background: transparent;
       border: 1px solid rgba(212, 175, 83, 0.3);
       color: #d4af53;
-      border-radius: 18px;
-      padding: 5px;
+      border-radius: 8px;
+      padding: 6px 8px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -268,127 +268,177 @@
     }
 
     .mobile-toggle svg {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    /* Side Drawer Overlay */
+    .mobile-sheet-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1998;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .mobile-sheet-overlay.active {
+      display: block;
+      opacity: 1;
     }
 
     /* Responsive Adjustments */
     @media (max-width: 991px) {
       .mobile-toggle {
         display: block;
-        position: relative;
-        z-index: 1200;
-        background: rgba(212, 175, 83, 0.08);
-        border: 1px solid rgba(212, 175, 83, 0.2);
-        border-radius: 12px;
       }
 
+      /* Right-side slide-in drawer */
       .nav-actions {
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
         width: 280px;
-        height: 100vh;
-        background: rgba(20, 20, 20, 0.98);
-        backdrop-filter: blur(25px);
-        -webkit-backdrop-filter: blur(25px);
+        background: #1e1e1e;
         flex-direction: column;
-        padding: 40px 1.8rem 2rem;
+        align-items: stretch;
+        padding: 0;
         gap: 0;
+        border-left: 1px solid rgba(212, 175, 83, 0.15);
         transform: translateX(100%);
         opacity: 1;
-        visibility: visible;
-        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-        box-shadow: -15px 0 35px rgba(0, 0, 0, 0.5);
-        z-index: 1100;
-        display: flex !important;
-        border-left: 1px solid rgba(212, 175, 83, 0.1);
+        visibility: hidden;
+        transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), visibility 0.35s;
+        z-index: 1999;
+        box-shadow: -6px 0 30px rgba(0, 0, 0, 0.5);
+        overflow-y: auto;
       }
 
       .nav-actions.active {
         transform: translateX(0);
+        visibility: visible;
       }
 
-      /* Drawer Header Styles */
-      .drawer-header {
-        display: flex !important;
-        justify-content: space-between;
+      /* Drawer user header */
+      .drawer-user-header {
+        display: flex;
         align-items: center;
-        width: 100%;
-        margin-bottom: 30px;
-        padding-bottom: 25px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        gap: 12px;
+        padding: 1.3rem 1.2rem 1rem;
+        border-bottom: 1px solid rgba(212, 175, 83, 0.15);
+        margin-bottom: 0.6rem;
       }
 
-      .drawer-user-name {
-        color: #fff;
-        font-weight: 600;
-        font-size: 1.05rem;
-        margin-bottom: 2px;
-        font-family: 'Playfair Display', serif;
-      }
-
-      .drawer-user-role {
-        color: rgba(255, 255, 255, 0.45);
-        font-size: 0.75rem;
-        font-family: 'DM Sans', sans-serif;
-      }
-
-      .logout-icon-btn {
-        background: rgba(255, 255, 255, 0.05);
-        color: rgba(255, 255, 255, 0.5);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
+      .drawer-avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #d4af53, #a07830);
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.2s;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #111;
+        flex-shrink: 0;
       }
 
-      .logout-icon-btn:hover {
-        color: #ff6b6b;
-        background: rgba(255, 107, 107, 0.1);
-      }
-
-      .nav-actions .d-flex {
+      .drawer-user-info {
+        display: flex;
         flex-direction: column;
-        align-items: flex-start !important;
+        gap: 2px;
+        overflow: hidden;
+      }
+
+      .drawer-username {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .drawer-role {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 500;
+        color: #d4af53;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* Stack admin tabs vertically as full-width rows */
+      .nav-actions .d-flex.align-items-center.gap-4 {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 2px !important;
         width: 100%;
-        gap: 8px !important;
-        margin: 0 0 20px 0 !important;
+        padding: 0 0.8rem;
       }
 
       .admin-tab {
-        width: 100%;
-        padding: 8px 12px;
-        border-radius: 0;
+        padding: 11px 14px;
         border-bottom: none;
-        border-left: 2px solid transparent;
+        border-radius: 8px;
+        font-size: 0.88rem;
         background: transparent;
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.6);
+        border: none;
+        color: rgba(255, 255, 255, 0.7);
+        transition: background 0.2s, color 0.2s;
+      }
+
+      .admin-tab:hover {
+        background: rgba(212, 175, 83, 0.1);
+        color: #d4af53;
+        border-bottom: none;
       }
 
       .admin-tab.active {
-        background: transparent;
+        background: rgba(212, 175, 83, 0.14);
         color: #d4af53;
-        border-left-color: #d4af53;
-        padding-left: 15px;
+        font-weight: 600;
+        border-left: 3px solid #d4af53;
+        border-bottom: none;
+        padding-left: 11px;
       }
 
-      .nav-actions .desktop-logout {
-        display: none !important;
+      .nav-actions form {
+        width: 100%;
+        padding: 0 0.8rem;
+      }
+
+      /* Divider between nav links and action buttons */
+      .nav-actions > div[style*="width: 1px"] {
+        display: block;
+        width: auto !important;
+        height: 1px !important;
+        background: rgba(255,255,255,0.07) !important;
+        margin: 0.8rem 0.8rem;
       }
 
       .btn-create {
-        width: 100% !important;
-        margin: 15px 0 0 0 !important;
+        width: 100%;
         justify-content: center;
-        padding: 10px !important;
-        font-size: 0.85rem !important;
+        padding: 10px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        margin-bottom: 6px;
+      }
+
+      .btn-logout {
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+        font-size: 0.85rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
       }
     }
 
@@ -412,10 +462,6 @@
       .brand-title {
         font-size: 0.95rem;
       }
-
-      .brand-divider {
-        margin: 0 0.5rem;
-      }
     }
 
     @media (max-width: 480px) {
@@ -435,17 +481,8 @@
         height: 75px;
       }
 
-      .brand-divider,
-      .brand-title {
-        display: block;
-      }
-
       .brand-title {
         font-size: 0.85rem;
-      }
-
-      .brand-divider {
-        margin: 0 0.3rem;
       }
     }
 
@@ -567,6 +604,7 @@
 <body>
 
 
+  <div class="mobile-sheet-overlay" id="sheetOverlay"></div>
   <nav class="navbar-pro">
     <div class="container-fluid">
       <a class="brand-wrapper"
@@ -589,24 +627,15 @@
 
       <div class="nav-actions" id="navActions">
         @auth
-          <!-- Mobile Header (Username & Logout Icon) -->
-          <div class="drawer-header d-lg-none">
-            <div>
-              <div class="drawer-user-name">{{ Auth::user()->name }}</div>
-              <div class="drawer-user-role">{{ Auth::user()->role == 1 ? 'Administrator' : 'Support User' }}</div>
+          <div class="drawer-user-header">
+            <div class="drawer-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+            <div class="drawer-user-info">
+              <span class="drawer-username">{{ Auth::user()->name }}</span>
+              <span class="drawer-role">{{ Auth::user()->role == 1 ? 'Administrator' : 'User' }}</span>
             </div>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-              @csrf
-              <button type="submit" class="logout-icon-btn" aria-label="Logout">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" y1="12" x2="9" y2="12" />
-                </svg>
-              </button>
-            </form>
           </div>
-
+        @endauth
+        @auth
           @if(Auth::user()->role == 1)
             <!-- Admin Navbar (Minimalist Tabs) -->
             <div class="d-flex align-items-center gap-4 me-3">
@@ -643,9 +672,9 @@
               </a>
             </div>
 
-            <div class="d-none d-lg-block" style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
 
-            <form method="POST" action="{{ route('logout') }}" class="desktop-logout" style="margin:0; margin-left: 5px;">
+            <form method="POST" action="{{ route('logout') }}" style="margin:0; margin-left: 5px;">
               @csrf
               <button type="submit" class="btn-logout" style="border: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -680,9 +709,9 @@
               Create Ticket
             </a>
 
-            <div class="d-none d-lg-block" style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
+            <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
 
-            <form method="POST" action="{{ route('logout') }}" class="desktop-logout" style="margin:0; margin-left: 5px;">
+            <form method="POST" action="{{ route('logout') }}" style="margin:0; margin-left: 5px;">
               @csrf
               <button type="submit" class="btn-logout" style="border: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -750,20 +779,31 @@
     document.addEventListener('DOMContentLoaded', function () {
       const toggle = document.getElementById('navbarToggle');
       const menu = document.getElementById('navActions');
+      const overlay = document.getElementById('sheetOverlay');
+
+      function openSheet() {
+        menu.classList.add('active');
+        overlay.style.display = 'block';
+        setTimeout(() => overlay.classList.add('active'), 10);
+        document.body.style.overflow = 'hidden';
+        toggle.querySelector('svg').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+      }
+
+      function closeSheet() {
+        menu.classList.remove('active');
+        overlay.classList.remove('active');
+        setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        document.body.style.overflow = '';
+        toggle.querySelector('svg').innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
+      }
 
       if (toggle && menu) {
         toggle.addEventListener('click', function (e) {
           e.stopPropagation();
-          menu.classList.toggle('active');
-
-          // Toggle icon
-          const svg = toggle.querySelector('svg');
-          if (menu.classList.contains('active')) {
-            svg.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
-          } else {
-            svg.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
-          }
+          menu.classList.contains('active') ? closeSheet() : openSheet();
         });
+
+        overlay.addEventListener('click', closeSheet);
       }
     });
   </script>
