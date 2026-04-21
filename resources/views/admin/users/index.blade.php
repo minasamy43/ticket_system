@@ -169,14 +169,15 @@
             font-size: 1.6rem;
             text-align: center;
         }
+        .page-title::after {
+            content: " :";
+        }
         .text-muted.lead {
             text-align: center;
             font-size: 0.9rem !important;
         }
         .btn-gold-action {
-            width: 100%;
-            justify-content: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
         .table-premium thead {
             display: none;
@@ -192,6 +193,8 @@
             background: #fff;
             box-shadow: 0 4px 15px rgba(0,0,0,0.02);
             border-radius: 16px !important;
+            display: flex;
+            flex-direction: column;
         }
         .table-premium tbody td {
             padding: 0.8rem 1rem !important;
@@ -201,6 +204,11 @@
             align-items: center;
             text-align: right;
         }
+        .table-premium tbody td[data-label="ID"] { order: 1; }
+        .table-premium tbody td[data-label="User"] { order: 2; }
+        .table-premium tbody td[data-label="Role"] { order: 3; }
+        .table-premium tbody td[data-label="Member Since"] { order: 4; }
+        
         .table-premium tbody td::before {
             content: attr(data-label) " : ";
             font-weight: 700;
@@ -211,9 +219,10 @@
             text-align: left;
         }
         .table-premium tbody td:last-child {
-            padding-top: 1rem !important;
-            margin-top: 0.5rem;
-            border-top: 1px solid rgba(0,0,0,0.04);
+            order: -1;
+            padding-bottom: 0.5rem !important;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
             justify-content: flex-end;
         }
         .table-premium tbody td:last-child::before {
@@ -269,8 +278,8 @@
 
 @section('content')
     <div class="premium-container container">
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-4 gap-3">
-            <div>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center align-items-md-end mb-4 gap-3">
+            <div class="text-center text-md-start">
                 <h1 class="page-title mb-1">Community Members</h1>
                 <p class="text-muted lead mb-0" style="font-size: 1rem;">Managing roles and permissions for system users.</p>
             </div>
