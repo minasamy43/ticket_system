@@ -163,7 +163,20 @@
             padding: 1.5rem 0.5rem;
         }
         .premium-card {
-            padding: 1.25rem;
+            padding: 1rem;
+        }
+        .page-title {
+            font-size: 1.6rem;
+            text-align: center;
+        }
+        .text-muted.lead {
+            text-align: center;
+            font-size: 0.9rem !important;
+        }
+        .btn-gold-action {
+            width: 100%;
+            justify-content: center;
+            margin-top: 10px;
         }
         .table-premium thead {
             display: none;
@@ -189,7 +202,7 @@
             text-align: right;
         }
         .table-premium tbody td::before {
-            content: attr(data-label);
+            content: attr(data-label) " : ";
             font-weight: 700;
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -209,7 +222,6 @@
         .table-premium tbody td.text-end {
             text-align: right !important;
         }
-        /* Fix dropdowns popping completely out of screen flow */
         .table-responsive {
             overflow: visible !important;
         }
