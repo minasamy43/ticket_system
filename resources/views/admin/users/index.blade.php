@@ -156,6 +156,64 @@
         box-shadow: 0 0 10px rgba(212, 175, 83, 0.1);
         background: #fff;
     }
+
+    /* Mobile Responsiveness Rules */
+    @media (max-width: 991px) {
+        .premium-container {
+            padding: 1.5rem 0.5rem;
+        }
+        .premium-card {
+            padding: 1.25rem;
+        }
+        .table-premium thead {
+            display: none;
+        }
+        .table-premium, .table-premium tbody, .table-premium tr, .table-premium td {
+            display: block;
+            width: 100%;
+        }
+        .table-premium tbody tr {
+            margin-bottom: 1.2rem;
+            padding: 0.5rem;
+            border: 1px solid var(--border-soft);
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border-radius: 16px !important;
+        }
+        .table-premium tbody td {
+            padding: 0.8rem 1rem !important;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: right;
+        }
+        .table-premium tbody td::before {
+            content: attr(data-label);
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-right: 15px;
+            text-align: left;
+        }
+        .table-premium tbody td:last-child {
+            padding-top: 1rem !important;
+            margin-top: 0.5rem;
+            border-top: 1px solid rgba(0,0,0,0.04);
+            justify-content: flex-end;
+        }
+        .table-premium tbody td:last-child::before {
+            display: none;
+        }
+        .table-premium tbody td.text-end {
+            text-align: right !important;
+        }
+        /* Fix dropdowns popping completely out of screen flow */
+        .table-responsive {
+            overflow: visible !important;
+        }
+    }
 </style>
 @endpush
 @section('navbar-buttons')
@@ -199,9 +257,9 @@
 
 @section('content')
     <div class="premium-container container">
-        <div class="d-flex justify-content-between align-items-end mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end mb-4 gap-3">
             <div>
-                <h1 class="page-title">Community Members</h1>
+                <h1 class="page-title mb-1">Community Members</h1>
                 <p class="text-muted lead mb-0" style="font-size: 1rem;">Managing roles and permissions for system users.</p>
             </div>
             <a href="{{ route('admin.users.create') }}" class="btn-gold-action shadow-none">
@@ -230,29 +288,29 @@
                     <tbody>
                         @foreach ($users as $user)
                             <tr style="animation: slideUp {{ 0.3 + ($loop->index * 0.05) }}s ease forwards;">
-                                <td>
+                                <td data-label="ID">
                                     <span class="text-muted fw-bold">#{{ $user->id }}</span>
                                 </td>
-                                <td>
+                                <td data-label="User">
                                     <div class="d-flex align-items-center">
                                         
-                                        <div>
+                                        <div class="text-end text-md-start">
                                             <div class="fw-bold">{{ $user->name }}</div>
                                             <div class="text-muted small" style="font-size: 0.8rem;">{{ $user->email }}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-label="Role">
                                     @if ($user->role == 1)
                                         <span class="user-badge" style="background: rgba(220, 53, 69, 0.1); color: #dc3545;">Technical</span>
                                     @else
                                         <span class="user-badge" style="background: rgba(13, 110, 253, 0.1); color: #0d6efd;"> User</span>
                                     @endif
                                 </td>
-                                <td>
+                                <td data-label="Member Since">
                                     <div class="text-muted small">{{ $user->created_at->format('M d, Y') }}</div>
                                 </td>
-                                <td class="text-end">
+                                <td data-label="Actions" class="text-end">
                                     <div class="dropdown">
                                         <button class="btn btn-link text-dark p-2" type="button" id="userActions{{ $user->id }}" data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false" style="background: var(--bg-light); border-radius: 8px;">
                                             <i class="fas fa-ellipsis-v"></i>
