@@ -125,6 +125,59 @@
         border-color: rgb(45, 45, 45);
         color: white;
     }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .manage-container {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-card {
+            padding: 1.25rem;
+            border-radius: 12px;
+        }
+
+        .item-card h4 {
+            font-size: 1.2rem;
+        }
+
+        .btn-premium-action, .btn-premium-danger {
+            font-size: 0.8rem;
+            padding: 0.5rem 0.8rem;
+        }
+
+        .sub-item-list h6 {
+            font-size: 0.9rem;
+        }
+
+        .table td {
+            font-size: 0.85rem;
+            padding: 0.6rem 0;
+        }
+
+        /* Stack buttons on very small screens */
+        @media (max-width: 480px) {
+            .btn-nav-match {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .item-card .d-flex.flex-md-row {
+                flex-direction: column !important;
+            }
+            
+            .item-card .d-flex.gap-2 {
+                width: 100% !important;
+                margin-top: 10px;
+            }
+        }
+    }
 </style>
 
 <div class="container mt-4 manage-container">
