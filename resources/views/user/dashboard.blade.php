@@ -291,9 +291,9 @@
                                     <td>
                                         <span class="badge"
                                             style="padding: 0.5rem 0.8rem; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-                                                                                                                    @if ($ticket->status == 'open') background: rgba(220, 53, 69, 0.1); color: #dc3545;
-                                                                                                                    @elseif($ticket->status == 'in progress') background: rgba(212, 175, 83, 0.15); color: #b8860b;
-                                                                                                                    @else background: rgba(25, 135, 84, 0.1); color: #198754; @endif">
+                                                                                                                            @if ($ticket->status == 'open') background: rgba(220, 53, 69, 0.1); color: #dc3545;
+                                                                                                                            @elseif($ticket->status == 'in progress') background: rgba(212, 175, 83, 0.15); color: #b8860b;
+                                                                                                                            @else background: rgba(25, 135, 84, 0.1); color: #198754; @endif">
                                             {{ ucfirst($ticket->status) }}
                                             @if ($ticket->status == 'open')
                                                 🎟️
@@ -397,7 +397,7 @@
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M12 5v14M5 12h14" />
                                 </svg>
-                                Create Your First Ticket
+                                Create Your Ticket
                             </a>
                         </div>
                     </div>
