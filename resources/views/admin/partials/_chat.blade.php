@@ -201,6 +201,40 @@
 
     /* Scrollbar */
     .chat-messages::-webkit-scrollbar { width: 6px; }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 480px) {
+        .chat-container.floating-chat {
+            width: 100%;
+            height: 90vh; /* Fill more of the screen on mobile */
+            right: 0;
+            border-radius: 20px 20px 0 0;
+            max-width: 100vw;
+        }
+
+        .chat-floating-btn {
+            bottom: 15px;
+            right: 15px;
+            width: 44px;
+            height: 44px;
+        }
+
+        .bubble {
+            max-width: 90%;
+        }
+
+        .bubble-image {
+            max-height: 200px;
+        }
+
+        .chat-header {
+            padding: 0.75rem 1rem;
+        }
+
+        .chat-messages {
+            padding: 1rem;
+        }
+    }
 </style>
 
 @if(isset($withTrigger) && $withTrigger && isset($ticket))

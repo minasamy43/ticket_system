@@ -354,6 +354,43 @@
         .search-icon-input::placeholder {
             color: transparent;
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .royal-card {
+                min-height: 110px;
+                padding: 1.25rem;
+            }
+            .royal-card-value {
+                font-size: 1.6rem;
+            }
+            .royal-card-icon-min {
+                width: 42px;
+                height: 42px;
+                font-size: 1.1rem;
+                top: 1rem;
+                right: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .table-bordered thead th, 
+            .table-bordered tbody td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .status-select-badge {
+                min-width: 80px;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.7rem;
+            }
+
+            .action-btn-premium {
+                width: 32px;
+                height: 32px;
+            }
+        }
     </style>
 
     <div class="container mt-4">

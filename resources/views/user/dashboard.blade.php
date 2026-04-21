@@ -139,6 +139,38 @@
         .search-icon-input::placeholder {
             color: transparent;
         }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 991px) {
+            .table-bordered thead th, 
+            .table-bordered tbody td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .action-btn-premium {
+                width: 32px;
+                height: 32px;
+            }
+
+            .badge {
+                padding: 0.4rem 0.6rem !important;
+                font-size: 0.65rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-create {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 10px;
+            }
+            
+            .col-lg-4 a {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 
     <div class="container mt-4">
