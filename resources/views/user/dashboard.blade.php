@@ -142,7 +142,8 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 991px) {
-            .table-bordered thead th, 
+
+            .table-bordered thead th,
             .table-bordered tbody td {
                 padding: 10px;
                 font-size: 0.8rem;
@@ -165,7 +166,7 @@
                 justify-content: center;
                 margin-bottom: 10px;
             }
-            
+
             .col-lg-4 a {
                 width: 100%;
                 justify-content: center;
@@ -181,7 +182,7 @@
                     👋 Welcome, <span style="color: #d4af53;">{{ Auth::user()->name }}</span>
                 </h2>
                 <p class="d-flex align-items-center justify-content-center justify-content-lg-start text-center text-lg-start"
-                   style="color: #666; margin-top: 15px; font-size: 0.95rem; gap: 12px; flex-wrap: wrap;">
+                    style="color: #666; margin-top: 15px; font-size: 0.95rem; gap: 12px; flex-wrap: wrap;">
                     <span
                         style="font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: #3b6fd4; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: rgba(59, 111, 212, 0.07); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(59, 111, 212, 0.12); box-shadow: 0 2px 5px rgba(59, 111, 212, 0.05); white-space: nowrap;">
                         <span style="margin-right: 4px;">👤</span> User
@@ -190,19 +191,24 @@
                 </p>
             </div>
             <div class="col-lg-4 text-lg-end">
-                <a href="{{ route('knowledge.base') }}" 
-                   style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: #fff; border: 1px solid rgba(212, 175, 83, 0.25); border-radius: 14px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(212, 175, 83, 0.08);">
-                    <div style="width: 40px; height: 40px; background: rgba(212, 175, 83, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #d4af53;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <a href="{{ route('knowledge.base') }}"
+                    style="display: inline-flex; align-items: center; gap: 10px; padding: 12px 24px; background: #fff; border: 1px solid rgba(212, 175, 83, 0.25); border-radius: 14px; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(212, 175, 83, 0.08);">
+                    <div
+                        style="width: 40px; height: 40px; background: rgba(212, 175, 83, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #d4af53;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
                             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
                             <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                         </svg>
                     </div>
                     <div style="text-align: left;">
-                        <div style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">Need Help?</div>
+                        <div
+                            style="font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700;">
+                            Need Help?</div>
                         <div style="font-size: 0.95rem; color: #111; font-weight: 600;">Knowledge Base</div>
                     </div>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af53" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 10px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af53" stroke-width="3"
+                        stroke-linecap="round" stroke-linejoin="round" style="margin-left: 10px;">
                         <polyline points="9 18 15 12 9 6"></polyline>
                     </svg>
                 </a>
@@ -287,9 +293,9 @@
                                     <td>
                                         <span class="badge"
                                             style="padding: 0.5rem 0.8rem; border-radius: 10px; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;
-                                                                    @if ($ticket->status == 'open') background: rgba(220, 53, 69, 0.1); color: #dc3545;
-                                                                    @elseif($ticket->status == 'in progress') background: rgba(212, 175, 83, 0.15); color: #b8860b;
-                                                                    @else background: rgba(25, 135, 84, 0.1); color: #198754; @endif">
+                                                                            @if ($ticket->status == 'open') background: rgba(220, 53, 69, 0.1); color: #dc3545;
+                                                                            @elseif($ticket->status == 'in progress') background: rgba(212, 175, 83, 0.15); color: #b8860b;
+                                                                            @else background: rgba(25, 135, 84, 0.1); color: #198754; @endif">
                                             {{ ucfirst($ticket->status) }}
                                             @if ($ticket->status == 'open')
                                                 🎟️
@@ -379,11 +385,16 @@
                 </div>
 
                 @if($tickets->isEmpty())
-                    <div class="empty-state-container text-center w-100" style="padding: 4rem 1rem; background: #fff; border-radius: 0 0 16px 16px;">
+                    <div class="empty-state-container text-center w-100"
+                        style="padding: 4rem 1rem; background: #fff; border-radius: 0 0 16px 16px;">
                         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">📭</div>
-                            <h5 style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">It's quiet here!</h5>
-                            <p style="color: #777; font-size: 0.95rem; margin-bottom: 1.5rem;">You haven't submitted any tickets matching this filter.</p>
+                            <div style="font-size: 3.5rem; margin-bottom: 0.5rem; opacity: 0.6; filter: grayscale(0.2);">📭
+                            </div>
+                            <h5
+                                style="font-family: 'Playfair Display', serif; color: #111; font-weight: 600; margin-bottom: 0.3rem;">
+                                It's quiet here!</h5>
+                            <p style="color: #777; font-size: 0.95rem; margin-bottom: 1.5rem;">You haven't submitted any tickets
+                                matching this filter.</p>
                             <a href="{{ route('tickets.create') }}" class="btn-create" style="text-decoration: none;">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                                     <path d="M12 5v14M5 12h14" />
