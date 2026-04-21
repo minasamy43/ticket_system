@@ -273,6 +273,11 @@
       display: block;
     }
 
+    /* Mobile Close Button (Inside Drawer) */
+    .mobile-close-btn {
+      display: none;
+    }
+
     /* Side Drawer Overlay */
     .mobile-sheet-overlay {
       display: none;
@@ -323,6 +328,28 @@
       .nav-actions.active {
         transform: translateX(0);
         visibility: visible;
+      }
+
+      .mobile-close-btn {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        padding: 1.2rem 1.2rem 0;
+        margin-bottom: -0.5rem;
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+
+      .mobile-close-btn:hover {
+        color: #d4af53;
+      }
+
+      .mobile-close-btn svg {
+        width: 26px;
+        height: 26px;
       }
 
       /* Drawer user header */
@@ -629,6 +656,12 @@
       </button>
 
       <div class="nav-actions" id="navActions">
+        <button class="mobile-close-btn d-lg-none" id="mobileCloseBtn" aria-label="Close Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
         @auth
           <div class="drawer-user-header">
             <div class="drawer-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
@@ -783,19 +816,18 @@
       const toggle = document.getElementById('navbarToggle');
       const menu = document.getElementById('navActions');
       const overlay = document.getElementById('sheetOverlay');
+      const closeBtn = document.getElementById('mobileCloseBtn');
 
       function openSheet() {
         menu.classList.add('active');
         overlay.style.display = 'block';
         setTimeout(() => overlay.classList.add('active'), 10);
-        toggle.querySelector('svg').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
       }
 
       function closeSheet() {
         menu.classList.remove('active');
         overlay.classList.remove('active');
         setTimeout(() => { overlay.style.display = 'none'; overlay.style.pointerEvents = 'none'; }, 320);
-        toggle.querySelector('svg').innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
       }
 
       if (toggle && menu) {
@@ -805,6 +837,10 @@
         });
 
         overlay.addEventListener('click', closeSheet);
+        if (closeBtn) closeBtn.addEventListener('click', closeSheet);
+
+        const navLinks = menu.querySelectorAll('a');
+        navLinks.forEach(link => link.addEventListener('click', closeSheet));
       }
     });
   </script>
