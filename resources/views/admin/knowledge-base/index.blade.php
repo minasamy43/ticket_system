@@ -136,7 +136,7 @@
     @endif
 
     <!-- Categories Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 mt-2 gap-3">
         <h2 class="section-title" style="margin-bottom: 0;">Knowledge Categories</h2>
         <button class="btn btn-nav-match" style="border-radius: 12px; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#createCategoryModal">+ New Category</button>
     </div>
@@ -145,25 +145,25 @@
         @foreach($categories as $category)
             <div class="col-12 mb-4">
                 <div class="item-card">
-                    <div class="d-flex justify-content-between align-items-start">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
                         <div>
                             <h4 style="font-weight: 700; color: #111; margin-bottom: 0.3rem;">
                                 <span style="font-size: 1.5rem; margin-right: 0.5rem;">{{ $category->icon }}</span> {{ $category->title }}
                             </h4>
                             <p style="color: #666; font-size: 0.95rem; margin-bottom: 0;">{{ $category->description }}</p>
                         </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn-premium-action" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $category->id }}">Edit</button>
-                            <form action="{{ route('admin.knowledge-base.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this category and all its articles?');">
+                        <div class="d-flex gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
+                            <button class="btn-premium-action flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $category->id }}">Edit</button>
+                            <form action="{{ route('admin.knowledge-base.categories.destroy', $category->id) }}" method="POST" class="flex-grow-1 flex-md-grow-0" onsubmit="return confirm('Are you sure you want to delete this category and all its articles?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn-premium-danger">Delete</button>
+                                <button type="submit" class="btn-premium-danger w-100">Delete</button>
                             </form>
                         </div>
                     </div>
 
                     <!-- Nested Articles -->
                     <div class="sub-item-list">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-3 gap-2">
                             <h6 style="font-weight: 700; margin: 0; color: #555;">Articles ({{ count($category->articles) }})</h6>
                             <button class="btn btn-sm btn-outline-secondary" style="border-radius: 8px; font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#createArticleModal" onclick="document.getElementById('article-cat-id').value='{{ $category->id }}'">+ Add Article</button>
                         </div>
@@ -264,8 +264,8 @@
     </div>
 
     <!-- FAQs Section -->
-    <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
-        <h2 class="section-title">Frequently Asked Questions</h2>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 mt-5 gap-3">
+        <h2 class="section-title mb-0" style="margin-bottom: 0;">Frequently Asked Questions</h2>
         <button class="btn btn-nav-match" style="border-radius: 12px; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#createFaqModal">+ New FAQ</button>
     </div>
 
@@ -273,16 +273,16 @@
         @foreach($faqs as $faq)
         <div class="col-12 mb-3">
             <div class="item-card" style="padding: 1.25rem;">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
                     <div>
                         <h6 style="font-weight: 700; color: #111; margin-bottom: 0.3rem;">Q: {{ $faq->question }}</h6>
                         <p style="color: #666; font-size: 0.9rem; margin-bottom: 0;">A: {{ Str::limit($faq->answer, 120) }}</p>
                     </div>
-                    <div class="d-flex gap-2">
-                        <button class="btn-premium-action" data-bs-toggle="modal" data-bs-target="#editFaqModal{{ $faq->id }}">Edit</button>
-                        <form action="{{ route('admin.knowledge-base.faqs.destroy', $faq->id) }}" method="POST" onsubmit="return confirm('Delete this FAQ?');">
+                    <div class="d-flex gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
+                        <button class="btn-premium-action flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#editFaqModal{{ $faq->id }}">Edit</button>
+                        <form action="{{ route('admin.knowledge-base.faqs.destroy', $faq->id) }}" method="POST" class="flex-grow-1 flex-md-grow-0" onsubmit="return confirm('Delete this FAQ?');">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn-premium-danger">Delete</button>
+                            <button type="submit" class="btn-premium-danger w-100">Delete</button>
                         </form>
                     </div>
                 </div>

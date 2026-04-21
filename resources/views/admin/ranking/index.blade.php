@@ -203,47 +203,44 @@
 
 @section('content')
     <div class="premium-container container">
-        <div class="row align-items-center mb-5">
-            <div class="col-lg-6 text-center text-lg-start mb-4 mb-lg-0">
+        <div class="row align-items-end mb-5">
+            <div class="col-lg-7 text-center text-lg-start mb-4 mb-lg-0">
                 <h1 class="page-title">Performance Elite</h1>
-                <p class="text-muted lead mb-0">Recognizing excellence in service and ticket resolution.</p>
+                <p class="text-muted lead mb-lg-0">Recognizing excellence in service and ticket resolution.</p>
             </div>
-            <div class="col-lg-6">
-                <form action="{{ route('admin.ranking.index') }}" method="GET" class="filter-section mb-0">
-                    <div class="row g-2 align-items-end justify-content-center justify-content-lg-end">
-                        <div class="col-4 col-sm-auto flex-grow-1 flex-sm-grow-0 text-start">
-                            <label class="form-label small text-uppercase fw-bold text-muted mb-2"> Day</label>
-                            <select name="day" class="form-select form-select-premium shadow-none px-2 px-sm-3">
-                                <option value="all" {{ $day == 'all' || !$day ? 'selected' : '' }}>All</option>
-                                @foreach(range(1, 31) as $d)
-                                    <option value="{{ $d }}" {{ $day == $d ? 'selected' : '' }}>{{ $d }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-4 col-sm-auto flex-grow-1 flex-sm-grow-0 text-start">
-                            <label class="form-label small text-uppercase fw-bold text-muted mb-2"> Month</label>
-                            <select name="month" class="form-select form-select-premium shadow-none px-2 px-sm-3">
-                                @foreach(range(1, 12) as $m)
-                                    <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
-                                        {{ Carbon\Carbon::create()->month($m)->format('M') }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-4 col-sm-auto flex-grow-1 flex-sm-grow-0 text-start">
-                            <label class="form-label small text-uppercase fw-bold text-muted mb-2"> Year</label>
-                            <select name="year" class="form-select form-select-premium shadow-none px-2 px-sm-3">
-                                @foreach(range(now()->year - 2, now()->year) as $y)
-                                    <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-12 col-sm-auto mt-2 mt-sm-0">
-                            <button type="submit" class="btn btn-gold-action shadow-none w-100">
-                                Show
-                            </button>
-                        </div>
+            <div class="col-lg-5">
+                <form action="{{ route('admin.ranking.index') }}" method="GET"
+                    class="filter-section d-flex flex-wrap flex-lg-nowrap gap-2 gap-lg-3 align-items-end mb-0">
+                    <div class="flex-grow-1 flex-lg-grow-0" style="min-width: 60px;">
+                        <label class="form-label small text-uppercase fw-bold text-muted mb-2 text-start d-block"> Day</label>
+                        <select name="day" class="form-select form-select-premium shadow-none">
+                            <option value="all" {{ $day == 'all' || !$day ? 'selected' : '' }}>All</option>
+                            @foreach(range(1, 31) as $d)
+                                <option value="{{ $d }}" {{ $day == $d ? 'selected' : '' }}>{{ $d }}</option>
+                            @endforeach
+                        </select>
                     </div>
+                    <div class="flex-grow-1 flex-lg-grow-0" style="min-width: 60px;">
+                        <label class="form-label small text-uppercase fw-bold text-muted mb-2 text-start d-block"> Month</label>
+                        <select name="month" class="form-select form-select-premium shadow-none">
+                            @foreach(range(1, 12) as $m)
+                                <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                                    {{ Carbon\Carbon::create()->month($m)->format('F') }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="flex-grow-1 flex-lg-grow-0" style="min-width: 80px;">
+                        <label class="form-label small text-uppercase fw-bold text-muted mb-2 text-start d-block"> Year</label>
+                        <select name="year" class="form-select form-select-premium shadow-none">
+                            @foreach(range(now()->year - 2, now()->year) as $y)
+                                <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>{{ $y }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-gold-action shadow-none w-100 w-lg-auto mt-2 mt-lg-0">
+                        Show
+                    </button>
                 </form>
             </div>
         </div>
