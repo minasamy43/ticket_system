@@ -142,6 +142,7 @@
 
         /* Mobile Responsiveness */
         @media (max-width: 991px) {
+
             .table-bordered thead th,
             .table-bordered tbody td {
                 padding: 10px;
@@ -152,13 +153,14 @@
                 width: 32px;
                 height: 32px;
             }
+        }
 
+        @media (max-width: 480px) {
             .btn-create {
                 width: auto !important;
                 padding: 10px 24px;
                 justify-content: center;
                 margin: 0 auto 10px;
-                display: flex;
             }
 
             .col-lg-4 a {
@@ -166,7 +168,6 @@
                 padding: 10px 20px;
                 justify-content: center;
                 margin: 0 auto;
-                display: flex;
             }
         }
     </style>
