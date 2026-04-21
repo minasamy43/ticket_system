@@ -157,14 +157,17 @@
 
         @media (max-width: 480px) {
             .btn-create {
-                width: 100%;
+                width: auto !important;
+                padding: 10px 24px;
                 justify-content: center;
-                margin-bottom: 10px;
+                margin: 0 auto 10px;
             }
 
             .col-lg-4 a {
-                width: 100%;
+                width: auto !important;
+                padding: 10px 20px;
                 justify-content: center;
+                margin: 0 auto;
             }
         }
     </style>
