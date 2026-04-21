@@ -732,18 +732,14 @@
                 Dashboard
               </a>
 
+              <a href="{{ route('tickets.create') }}"
+                class="admin-tab {{ request()->routeIs('tickets.create') ? 'active' : '' }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M12 5v14M5 12h14" />
+                </svg>
+                Create Ticket
+              </a>
             </div>
-
-            <a href="{{ route('tickets.create') }}"
-              style="display: flex; align-items: center; gap: 6px; background: rgba(212,175,83,0.15); color: #d4af53; border: 1px solid rgba(212,175,83,0.3); padding: 5px 12px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; text-decoration: none; margin-right: 12px; transition: all 0.2s;"
-              onmouseover="this.style.background='#d4af53'; this.style.color='#111';"
-              onmouseout="this.style.background='rgba(212,175,83,0.15)'; this.style.color='#d4af53';">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                style="width: 14px; height: 14px;">
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              Create Ticket
-            </a>
 
             <div style="width: 1px; height: 20px; background: rgba(255,255,255,0.15);"></div>
 
