@@ -9,7 +9,6 @@
         </svg>
         Create Ticket
     </a>
-
     <form method="POST" action="{{ route('logout') }}" style="margin:0">
         @csrf
         <button type="submit" class="btn-logout">

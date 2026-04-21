@@ -451,5 +451,4 @@
 
     {{-- Messenger Chat Component --}}
     @include('admin.partials._chat', ['ticket' => $ticket, 'isStatic' => false, 'withTrigger' => true])
-
 @endsection

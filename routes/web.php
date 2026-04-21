@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-//Auth
+//General routes
 Route::get('login', [App\Http\Controllers\AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
 Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
@@ -58,17 +58,14 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('admin.users.destroy');
     // Admin Ranking
     Route::get('admin/ranking', [App\Http\Controllers\Admin\RankingController::class, 'index'])->name('admin.ranking.index');
-
     // Admin Knowledge Base
     Route::get('admin/knowledge-base', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'index'])->name('admin.knowledge-base.index');
     Route::post('admin/knowledge-base/categories', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'storeCategory'])->name('admin.knowledge-base.categories.store');
     Route::put('admin/knowledge-base/categories/{id}', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'updateCategory'])->name('admin.knowledge-base.categories.update');
     Route::delete('admin/knowledge-base/categories/{id}', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'destroyCategory'])->name('admin.knowledge-base.categories.destroy');
-
     Route::post('admin/knowledge-base/articles', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'storeArticle'])->name('admin.knowledge-base.articles.store');
     Route::put('admin/knowledge-base/articles/{id}', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'updateArticle'])->name('admin.knowledge-base.articles.update');
     Route::delete('admin/knowledge-base/articles/{id}', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'destroyArticle'])->name('admin.knowledge-base.articles.destroy');
-
     Route::post('admin/knowledge-base/faqs', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'storeFaq'])->name('admin.knowledge-base.faqs.store');
     Route::put('admin/knowledge-base/faqs/{id}', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'updateFaq'])->name('admin.knowledge-base.faqs.update');
     Route::delete('admin/knowledge-base/faqs/{id}', [App\Http\Controllers\Admin\KnowledgeBaseController::class, 'destroyFaq'])->name('admin.knowledge-base.faqs.destroy');

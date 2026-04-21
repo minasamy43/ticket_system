@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('title', 'Admin Dashboard')
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
 @section('navbar-buttons')
     <a href="{{ route('admin.knowledge-base.index') }}" class="btn-create">
@@ -40,6 +42,11 @@
 @section('content')
 
     <style>
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
         .new-badge {
             background-color: rgba(220, 53, 69, 0.1);
             color: #dc3545;
@@ -164,12 +171,11 @@
         }
 
         .royal-card-title {
-            font-family: 'DM Sans', sans-serif;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: #999;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #888;
+            letter-spacing: 0.3px;
             margin-bottom: 0.55rem;
         }
 
@@ -186,7 +192,8 @@
             font-size: 0.72rem;
             color: #bbb;
             margin-top: 0.45rem;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 400;
         }
 
         .royal-card-icon-min {
@@ -410,7 +417,7 @@
             <p style="color: #666; margin-top: 15px; font-size: 0.95rem; gap: 12px; flex-wrap: wrap;"
                 class="d-flex align-items-center justify-content-center justify-content-md-start text-center text-md-start">
                 <span
-                    style="font-family: 'DM Sans', sans-serif; font-size: 0.68rem; color: #0d9488; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; background: rgba(13, 148, 136, 0.08); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(13, 148, 136, 0.2); box-shadow: 0 2px 8px rgba(13, 148, 136, 0.05); white-space: nowrap;">
+                    style="font-family: 'Outfit', sans-serif; font-size: 0.68rem; color: #0d9488; font-weight: 700; text-transform: none; letter-spacing: 0.3px; background: rgba(13, 148, 136, 0.08); padding: 4px 12px; border-radius: 50px; border: 1px solid rgba(13, 148, 136, 0.2); box-shadow: 0 2px 8px rgba(13, 148, 136, 0.05); white-space: nowrap;">
                     <span style="margin-right: 4px;">🛡️</span> Technical
                 </span>
                 <span>Monitor tickets, manage users, and view system analytics below.</span>
@@ -843,45 +850,45 @@
                 });
 
                 row.innerHTML = `
-                        <td style="font-weight: 500;">${ticket.user_name}</td>
-                        <td>${ticket.subject}</td>
-                        <td>
-                            <select class="status-select-badge ${ticket.status === 'open' ? 'status-open' : (ticket.status === 'closed' ? 'status-closed' : 'status-progress')}"
-                                    onchange="updateStatusLive(${ticket.id}, this.value, this)">
-                                <option value="open" ${ticket.status === 'open' ? 'selected' : ''}>Open 🎟️</option>
-                                <option value="in progress" ${ticket.status === 'in progress' ? 'selected' : ''}>In Progress 👍🏻</option>
-                                <option value="closed" ${ticket.status === 'closed' ? 'selected' : ''}>Closed ✅️</option>
-                            </select>
-                        </td>
-                        <td class="text-muted" id="inprogress-${ticket.id}">${ticket.inprogress_by}</td>
-                        <td class="text-muted" id="closer-${ticket.id}">${ticket.closer}</td>
-                        <td>
-                            <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="color:#d4af53; flex-shrink:0;">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
-                                    </svg>
-                                </span>
-                                <div>
-                                    <div style="font-weight:600; color:#333; font-size:0.88rem; line-height:1.2;">${ticket.time}</div>
-                                    <div style="font-size:0.72rem; color:#aaa; margin-top:2px;">${ticket.relative_time}</div>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            <a href="javascript:void(0)" onclick="openAdminChat(${ticket.id})" class="action-btn-premium position-relative" title="Chat">
-                                <svg viewBox="0 0 256 256" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill="url(#messenger-grad)" d="M128,24C68.9,24,21,68.6,21,123.5c0,31.2,15.7,58.5,40.1,76.5c1.4,1,2.5,2.6,2.8,4.3l3.8,27.3c0.4,3,3.7,4.8,6.4,3.3l29.1-14.9c1-0.5,2.2-0.6,3.2-0.3c7.2,1.8,14.8,2.7,22.7,2.7c59.1,0,107-44.6,107-99.5S187.1,24,128,24z M138.8,148v-0.1l-25.5-27c-4-4.2-10.6-4.5-15.1-0.5l-31.5,28.5c-3,2.7-7.2-0.8-5.2-4.1l29.4-48c3.2-5.3,10.6-6.6,15.5-2.8l25.3,19.3c3.8,2.9,9.3,3.3,13.5-0.1l32-26.1c3-2.5,7,1,5.2,4.3L153,141.5C149.8,146.9,142.5,148.6,138.8,148z" />
-                                </svg>
-                                ${ticket.unread_replies_count > 0 ? `
-                                    <span id="unread-count-${ticket.id}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light shadow-sm"
-                                          style="font-size: 0.66rem; padding: 0.24em 0.45em; line-height: 1;">
-                                        ${ticket.unread_replies_count > 99 ? '99+' : ticket.unread_replies_count}
-                                    </span>
-                                ` : ''}
-                            </a>
-                        </td>
-                    `;
+                                                <td style="font-weight: 500;">${ticket.user_name}</td>
+                                                <td>${ticket.subject}</td>
+                                                <td>
+                                                    <select class="status-select-badge ${ticket.status === 'open' ? 'status-open' : (ticket.status === 'closed' ? 'status-closed' : 'status-progress')}"
+                                                            onchange="updateStatusLive(${ticket.id}, this.value, this)">
+                                                        <option value="open" ${ticket.status === 'open' ? 'selected' : ''}>Open 🎟️</option>
+                                                        <option value="in progress" ${ticket.status === 'in progress' ? 'selected' : ''}>In Progress 👍🏻</option>
+                                                        <option value="closed" ${ticket.status === 'closed' ? 'selected' : ''}>Closed ✅️</option>
+                                                    </select>
+                                                </td>
+                                                <td class="text-muted" id="inprogress-${ticket.id}">${ticket.inprogress_by}</td>
+                                                <td class="text-muted" id="closer-${ticket.id}">${ticket.closer}</td>
+                                                <td>
+                                                    <div style="display:flex; align-items:center; gap:8px;">
+                                                        <span style="color:#d4af53; flex-shrink:0;">
+                                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                                                            </svg>
+                                                        </span>
+                                                        <div>
+                                                            <div style="font-weight:600; color:#333; font-size:0.88rem; line-height:1.2;">${ticket.time}</div>
+                                                            <div style="font-size:0.72rem; color:#aaa; margin-top:2px;">${ticket.relative_time}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="javascript:void(0)" onclick="openAdminChat(${ticket.id})" class="action-btn-premium position-relative" title="Chat">
+                                                        <svg viewBox="0 0 256 256" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path fill="url(#messenger-grad)" d="M128,24C68.9,24,21,68.6,21,123.5c0,31.2,15.7,58.5,40.1,76.5c1.4,1,2.5,2.6,2.8,4.3l3.8,27.3c0.4,3,3.7,4.8,6.4,3.3l29.1-14.9c1-0.5,2.2-0.6,3.2-0.3c7.2,1.8,14.8,2.7,22.7,2.7c59.1,0,107-44.6,107-99.5S187.1,24,128,24z M138.8,148v-0.1l-25.5-27c-4-4.2-10.6-4.5-15.1-0.5l-31.5,28.5c-3,2.7-7.2-0.8-5.2-4.1l29.4-48c3.2-5.3,10.6-6.6,15.5-2.8l25.3,19.3c3.8,2.9,9.3,3.3,13.5-0.1l32-26.1c3-2.5,7,1,5.2,4.3L153,141.5C149.8,146.9,142.5,148.6,138.8,148z" />
+                                                        </svg>
+                                                        ${ticket.unread_replies_count > 0 ? `
+                                                            <span id="unread-count-${ticket.id}" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light shadow-sm"
+                                                                  style="font-size: 0.66rem; padding: 0.24em 0.45em; line-height: 1;">
+                                                                ${ticket.unread_replies_count > 99 ? '99+' : ticket.unread_replies_count}
+                                                            </span>
+                                                        ` : ''}
+                                                    </a>
+                                                </td>
+                                            `;
 
                 tbody.insertBefore(row, tbody.firstChild);
             });
