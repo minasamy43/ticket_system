@@ -278,15 +278,18 @@
       display: none;
       position: fixed;
       inset: 0;
+      right: 280px;
       background: rgba(0, 0, 0, 0.5);
       z-index: 1998;
       opacity: 0;
+      pointer-events: none;
       transition: opacity 0.3s ease;
     }
 
     .mobile-sheet-overlay.active {
       display: block;
       opacity: 1;
+      pointer-events: auto;
     }
 
     /* Responsive Adjustments */
@@ -785,15 +788,13 @@
         menu.classList.add('active');
         overlay.style.display = 'block';
         setTimeout(() => overlay.classList.add('active'), 10);
-        document.body.style.overflow = 'hidden';
         toggle.querySelector('svg').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
       }
 
       function closeSheet() {
         menu.classList.remove('active');
         overlay.classList.remove('active');
-        setTimeout(() => { overlay.style.display = 'none'; }, 300);
-        document.body.style.overflow = '';
+        setTimeout(() => { overlay.style.display = 'none'; overlay.style.pointerEvents = 'none'; }, 320);
         toggle.querySelector('svg').innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
       }
 
