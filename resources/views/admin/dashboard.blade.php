@@ -1,6 +1,4 @@
 @extends('layouts.app')
-
-@section('title', 'Admin Dashboard')
 <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;500;600;700&display=swap"
     rel="stylesheet">

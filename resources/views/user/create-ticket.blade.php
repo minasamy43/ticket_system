@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Create Ticket')
-
 @section('navbar-buttons')
     <a href="{{ route('user.dashboard') }}" class="btn-create">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">

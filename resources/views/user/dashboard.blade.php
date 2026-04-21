@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'User Dashboard')
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
 @section('navbar-buttons')
     <a href="{{ route('tickets.create') }}" class="btn-create">
