@@ -161,20 +161,10 @@
             padding: 0.6rem 0;
         }
 
-        /* Stack buttons on very small screens */
+        /* Buttons stay on same line */
         @media (max-width: 480px) {
-            .btn-nav-match {
-                width: 100%;
-                text-align: center;
-            }
-            
-            .item-card .d-flex.flex-md-row {
-                flex-direction: column !important;
-            }
-            
-            .item-card .d-flex.gap-2 {
-                width: 100% !important;
-                margin-top: 10px;
+            .item-card .d-flex {
+                flex-wrap: nowrap;
             }
         }
     }
@@ -205,11 +195,11 @@
                             </h4>
                             <p style="color: #666; font-size: 0.95rem; margin-bottom: 0;">{{ $category->description }}</p>
                         </div>
-                        <div class="d-flex gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
-                            <button class="btn-premium-action flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $category->id }}">Edit</button>
-                            <form action="{{ route('admin.knowledge-base.categories.destroy', $category->id) }}" method="POST" class="flex-grow-1 flex-md-grow-0" onsubmit="return confirm('Are you sure you want to delete this category and all its articles?');">
+                        <div class="d-flex gap-2 align-items-center flex-shrink-0 mt-3 mt-md-0">
+                            <button class="btn-premium-action" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $category->id }}">Edit</button>
+                            <form action="{{ route('admin.knowledge-base.categories.destroy', $category->id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Are you sure you want to delete this category and all its articles?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn-premium-danger w-100">Delete</button>
+                                <button type="submit" class="btn-premium-danger">Delete</button>
                             </form>
                         </div>
                     </div>
@@ -228,11 +218,13 @@
                                     <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
                                         <td style="font-weight: 500; color: #333;" colspan="2">📄 {{ $article->title }}</td>
                                         <td class="text-end">
-                                            <button class="btn btn-sm text-primary p-0 mx-2" data-bs-toggle="modal" data-bs-target="#editArticleModal{{ $article->id }}">Edit</button>
-                                            <form action="{{ route('admin.knowledge-base.articles.destroy', $article->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete article?');">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-sm text-danger p-0 pt-1">Del</button>
-                                            </form>
+                                            <div class="d-flex align-items-center justify-content-end gap-3">
+                                                <button class="btn btn-sm text-primary p-0" data-bs-toggle="modal" data-bs-target="#editArticleModal{{ $article->id }}">Edit</button>
+                                                <form action="{{ route('admin.knowledge-base.articles.destroy', $article->id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Delete article?');">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm text-danger p-0">Del</button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                     
@@ -331,11 +323,11 @@
                         <h6 style="font-weight: 700; color: #111; margin-bottom: 0.3rem;">Q: {{ $faq->question }}</h6>
                         <p style="color: #666; font-size: 0.9rem; margin-bottom: 0;">A: {{ Str::limit($faq->answer, 120) }}</p>
                     </div>
-                    <div class="d-flex gap-2 w-100 w-md-auto justify-content-start justify-content-md-end">
-                        <button class="btn-premium-action flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#editFaqModal{{ $faq->id }}">Edit</button>
-                        <form action="{{ route('admin.knowledge-base.faqs.destroy', $faq->id) }}" method="POST" class="flex-grow-1 flex-md-grow-0" onsubmit="return confirm('Delete this FAQ?');">
+                    <div class="d-flex gap-2 align-items-center flex-shrink-0 mt-3 mt-md-0">
+                        <button class="btn-premium-action" data-bs-toggle="modal" data-bs-target="#editFaqModal{{ $faq->id }}">Edit</button>
+                        <form action="{{ route('admin.knowledge-base.faqs.destroy', $faq->id) }}" method="POST" style="margin:0;" onsubmit="return confirm('Delete this FAQ?');">
                             @csrf @method('DELETE')
-                            <button type="submit" class="btn-premium-danger w-100">Delete</button>
+                            <button type="submit" class="btn-premium-danger">Delete</button>
                         </form>
                     </div>
                 </div>
