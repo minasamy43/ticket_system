@@ -168,60 +168,62 @@
                             <button class="btn btn-sm btn-outline-secondary" style="border-radius: 8px; font-size: 0.75rem; font-weight: 600;" data-bs-toggle="modal" data-bs-target="#createArticleModal" onclick="document.getElementById('article-cat-id').value='{{ $category->id }}'">+ Add Article</button>
                         </div>
 
-                        <div class="articles-list">
-                            <ul class="list-unstyled mb-0">
-                                @foreach($category->articles as $article)
-                                <li class="d-flex justify-content-between align-items-center py-2" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-                                    <div style="font-weight: 500; color: #333;">📄 {{ $article->title }}</div>
-                                    <div class="text-end ms-3 text-nowrap">
-                                        <button class="btn btn-sm text-primary p-0 mx-2" data-bs-toggle="modal" data-bs-target="#editArticleModal{{ $article->id }}">Edit</button>
-                                        <form action="{{ route('admin.knowledge-base.articles.destroy', $article->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete article?');">
-                                            @csrf @method('DELETE')
-                                            <button type="submit" class="btn btn-sm text-danger p-0 pt-1">Del</button>
-                                        </form>
-                                    </div>
-                                </li>
-                                
-                                <!-- Edit Article Modal -->
-                                <div class="modal fade" id="editArticleModal{{ $article->id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content" style="border-radius: 16px; border: none;">
-                                            <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
-                                                <h5 class="modal-title" style="font-weight: 700;">Edit Article</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <form action="{{ route('admin.knowledge-base.articles.update', $article->id) }}" method="POST">
-                                                @csrf @method('PUT')
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label class="form-label" style="font-weight: 600;">Category</label>
-                                                        <select name="kb_category_id" class="form-select" required>
-                                                            @foreach($categories as $c)
-                                                                <option value="{{ $c->id }}" {{ $article->kb_category_id == $c->id ? 'selected' : '' }}>{{ $c->title }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label" style="font-weight: 600;">Title</label>
-                                                        <input type="text" name="title" class="form-control" value="{{ $article->title }}" required>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label" style="font-weight: 600;">Content (HTML)</label>
-                                                        <textarea name="content" class="form-control" rows="4">{{ $article->content }}</textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer" style="border-top: none;">
-                                                    <button type="submit" class="btn btn-nav-match w-100" style="border-radius: 10px;">Save Changes</button>
-                                                </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless align-middle mb-0">
+                                <tbody>
+                                    @foreach($category->articles as $article)
+                                    <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                        <td style="font-weight: 500; color: #333;" colspan="2">📄 {{ $article->title }}</td>
+                                        <td class="text-end">
+                                            <button class="btn btn-sm text-primary p-0 mx-2" data-bs-toggle="modal" data-bs-target="#editArticleModal{{ $article->id }}">Edit</button>
+                                            <form action="{{ route('admin.knowledge-base.articles.destroy', $article->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete article?');">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="btn btn-sm text-danger p-0 pt-1">Del</button>
                                             </form>
+                                        </td>
+                                    </tr>
+                                    
+                                    <!-- Edit Article Modal -->
+                                    <div class="modal fade" id="editArticleModal{{ $article->id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content" style="border-radius: 16px; border: none;">
+                                                <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                                                    <h5 class="modal-title" style="font-weight: 700;">Edit Article</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <form action="{{ route('admin.knowledge-base.articles.update', $article->id) }}" method="POST">
+                                                    @csrf @method('PUT')
+                                                    <div class="modal-body">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" style="font-weight: 600;">Category</label>
+                                                            <select name="kb_category_id" class="form-select" required>
+                                                                @foreach($categories as $c)
+                                                                    <option value="{{ $c->id }}" {{ $article->kb_category_id == $c->id ? 'selected' : '' }}>{{ $c->title }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" style="font-weight: 600;">Title</label>
+                                                            <input type="text" name="title" class="form-control" value="{{ $article->title }}" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" style="font-weight: 600;">Content (HTML)</label>
+                                                            <textarea name="content" class="form-control" rows="4">{{ $article->content }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer" style="border-top: none;">
+                                                        <button type="submit" class="btn btn-nav-match w-100" style="border-radius: 10px;">Save Changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                @endforeach
-                                @if(count($category->articles) == 0)
-                                    <li class="text-muted py-2" style="font-size: 0.85rem;">No articles in this category.</li>
-                                @endif
-                            </ul>
+                                    @endforeach
+                                    @if(count($category->articles) == 0)
+                                        <tr><td colspan="3" class="text-muted" style="font-size: 0.85rem;">No articles in this category.</td></tr>
+                                    @endif
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
